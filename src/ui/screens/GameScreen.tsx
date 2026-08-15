@@ -31,13 +31,30 @@ function isMapTarget(target: EventTarget | null): boolean {
   );
 }
 
+interface DismissedSelectedEntitySurface {
+  readonly selectedEntity: GameStoreState['view']['selectedEntity'];
+  readonly commandError: GameStoreState['commandError'];
+}
+
 function SelectedEntitySurface({ state }: { readonly state: GameStoreState }) {
-  const [visible, setVisible] = useState(true);
-  if (!visible) return null;
+  const [dismissed, setDismissed] =
+    useState<DismissedSelectedEntitySurface | null>(null);
+  const isDismissed =
+    dismissed?.selectedEntity === state.view.selectedEntity &&
+    dismissed.commandError === state.commandError;
+  if (isDismissed) return null;
 
   return (
     <div className="game-hud__selected">
-      <SelectedEntityPanel state={state} onDismiss={() => setVisible(false)} />
+      <SelectedEntityPanel
+        state={state}
+        onDismiss={() =>
+          setDismissed({
+            selectedEntity: state.view.selectedEntity,
+            commandError: state.commandError,
+          })
+        }
+      />
     </div>
   );
 }
@@ -51,14 +68,8 @@ export function GameScreen({
   const state = useStore(store);
   const gameHostRef = useRef<HTMLDivElement>(null);
   const radioToggleRef = useRef<HTMLButtonElement>(null);
-  const selectedEntityKey = state.view.selectedEntity
-    ? `${state.view.selectedEntity.kind}:${state.view.selectedEntity.id}`
-    : null;
-  const selectedPanelKey = selectedEntityKey
-    ? `${selectedEntityKey}:${state.commandError ?? 'ready'}`
-    : state.commandError
-      ? `error:${state.commandError}`
-      : null;
+  const selectedPanelAvailable =
+    state.view.selectedEntity !== null || state.commandError !== null;
 
   useEffect(() => {
     const gameHost = gameHostRef.current;
@@ -90,8 +101,6 @@ export function GameScreen({
         } else if (current.radioOpen) {
           current.closeRadio();
           radioToggleRef.current?.focus();
-        } else if (current.view.routingRoverId !== null) {
-          current.cancelRoute();
         } else {
           return;
         }
@@ -173,8 +182,8 @@ export function GameScreen({
       </section>
 
       <div className="game-hud">
-        {selectedPanelKey !== null ? (
-          <SelectedEntitySurface key={selectedPanelKey} state={state} />
+        {selectedPanelAvailable ? (
+          <SelectedEntitySurface state={state} />
         ) : null}
 
         {state.radioOpen ? (
@@ -195,7 +204,15 @@ export function GameScreen({
             onClick={() => state.pause()}
             disabled={snapshot.phase !== 'RUNNING'}
           >
-            <span aria-hidden="true">‖</span>
+            <svg
+              className="hud-control__icon"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <rect x="6" y="4" width="4" height="16" rx="1" />
+              <rect x="14" y="4" width="4" height="16" rx="1" />
+            </svg>
           </button>
           <button
             ref={radioToggleRef}
@@ -206,8 +223,17 @@ export function GameScreen({
             aria-controls="radio-drawer"
             onClick={() => state.toggleRadio()}
           >
-            <span aria-hidden="true">⌁</span>
-            <span>Рация</span>
+            <svg
+              className="hud-control__icon"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path d="M8 6.5 17.5 3" />
+              <rect x="4" y="7" width="16" height="12" rx="3" />
+              <circle cx="9" cy="13" r="2.5" />
+              <path d="M14 11h3M14 14h3M7 21h10" />
+            </svg>
           </button>
         </div>
       </div>

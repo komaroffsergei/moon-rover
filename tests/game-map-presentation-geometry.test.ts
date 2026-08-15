@@ -170,19 +170,41 @@ describe('map presentation geometry', () => {
     ).toBe(true);
   });
 
-  it('projects battery and three capacity-normalized cargo lines without game rules', () => {
-    expect(
-      createRoverHudPresentation({
-        kind: 'courier',
-        battery: 68,
-        batteryCapacity: 100,
-        cargo: { oxygen: 12, food: 18, equipment: 30 },
-        cargoCapacity: 60,
-      }),
-    ).toEqual({
-      batteryRatio: 0.68,
-      cargoRatios: [0.2, 0.3, 0.5],
+  it('projects courier cargo as consecutive segments of one capacity scale', () => {
+    const presentation = createRoverHudPresentation({
+      kind: 'courier',
+      battery: 68,
+      batteryCapacity: 100,
+      cargo: { oxygen: 12, food: 18, equipment: 0 },
+      cargoCapacity: 60,
     });
+
+    expect(presentation).toEqual({
+      batteryRatio: 0.68,
+      cargoRatios: [0.2, 0.3, 0],
+    });
+    expect(
+      presentation.cargoRatios?.reduce((total, ratio) => total + ratio, 0),
+    ).toBeCloseTo(0.5);
+  });
+
+  it('clamps rover HUD ratios and never projects cargo beyond one capacity', () => {
+    const overloaded = createRoverHudPresentation({
+      kind: 'courier',
+      battery: 120.5,
+      batteryCapacity: 100,
+      cargo: { oxygen: 48.5, food: 18.25, equipment: 13.25 },
+      cargoCapacity: 60,
+    });
+
+    expect(overloaded.batteryRatio).toBe(1);
+    expect(overloaded.cargoRatios).not.toBeNull();
+    expect(
+      overloaded.cargoRatios?.every((ratio) => ratio >= 0 && ratio <= 1),
+    ).toBe(true);
+    expect(
+      overloaded.cargoRatios?.reduce((total, ratio) => total + ratio, 0),
+    ).toBeLessThanOrEqual(1);
 
     expect(
       createRoverHudPresentation({
@@ -195,7 +217,7 @@ describe('map presentation geometry', () => {
     ).toEqual({ batteryRatio: 0, cargoRatios: null });
   });
 
-  it('gives all six level-five rovers distinct selectable stack positions', () => {
+  it('separates all six level-five rover HUD rings', () => {
     const offsets = Array.from({ length: 6 }, (_value, index) =>
       createRoverGroupOffset(index, 6),
     );
@@ -208,8 +230,14 @@ describe('map presentation geometry', () => {
             offsets[left]!.x - offsets[right]!.x,
             offsets[left]!.y - offsets[right]!.y,
           ),
-        ).toBeGreaterThan(21);
+        ).toBeGreaterThanOrEqual(79.9);
       }
     }
+
+    const upperRight = offsets[1]!;
+    const lowerRight = offsets[2]!;
+    const upperRingBottom = upperRight.y + 29.5;
+    const lowerCargoTop = lowerRight.y - 47;
+    expect(lowerCargoTop).toBeGreaterThan(upperRingBottom);
   });
 });

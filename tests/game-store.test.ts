@@ -1,11 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import type {
-  Cargo,
-  CommandResult,
-  GameCommand,
-  GridCell,
-} from '../src/domain';
+import type { Cargo, CommandResult, GameCommand } from '../src/domain';
 import type {
   MapBatteryTransferPreview,
   MapGameController,
@@ -63,14 +58,9 @@ function frozenView(): MapGameView {
     }),
     baseCell: Object.freeze({ column: 0, row: 0 }),
     selectedEntity: null,
-    routingRoverId: null,
     focusRequest: null,
     centerMetrics: Object.freeze([]),
     roverActions: Object.freeze([]),
-    routeDraft: null,
-    candidateCells: Object.freeze([]),
-    forecast: null,
-    canDispatchRoute: false,
   });
 }
 
@@ -99,12 +89,6 @@ function controllerHarness(initialView = frozenView()) {
     advance: vi.fn(() => []),
     selectEntity: vi.fn(() => true),
     focusEntity: vi.fn(() => true),
-    beginRoute: vi.fn(() => true),
-    cancelRoute: vi.fn(),
-    selectCell: vi.fn(() => true),
-    undo: vi.fn(),
-    clear: vi.fn(),
-    dispatchRoute: vi.fn(() => ({ ok: true as const, events: [] })),
     routeSelectedRoverTo: vi.fn(() => ({ ok: true as const, events: [] })),
     previewBatteryTransfer: vi.fn(() => preview),
   };
@@ -229,31 +213,16 @@ describe('per-session game store', () => {
     session.dispose();
   });
 
-  it('delegates entity and manual-route interactions to the controller', () => {
+  it('delegates entity interactions to the controller', () => {
     const harness = controllerHarness();
     const session = createGameStore({ controller: harness.controller, level });
     const entity: MapSelectedEntity = { kind: 'rover', id: 'courier-1' };
-    const cell: GridCell = { column: 1, row: 0 };
 
     expect(session.store.getState().selectEntity(entity)).toBe(true);
     expect(session.store.getState().focusEntity(entity)).toBe(true);
-    expect(session.store.getState().beginRoute('courier-1')).toBe(true);
-    expect(session.store.getState().selectCell(cell)).toBe(true);
-    session.store.getState().undoRoute();
-    session.store.getState().clearRoute();
-    expect(session.store.getState().dispatchRoute()).toMatchObject({
-      ok: true,
-    });
-    session.store.getState().cancelRoute();
 
     expect(harness.controller.selectEntity).toHaveBeenCalledWith(entity);
     expect(harness.controller.focusEntity).toHaveBeenCalledWith(entity);
-    expect(harness.controller.beginRoute).toHaveBeenCalledWith('courier-1');
-    expect(harness.controller.selectCell).toHaveBeenCalledWith(cell);
-    expect(harness.controller.undo).toHaveBeenCalledOnce();
-    expect(harness.controller.clear).toHaveBeenCalledOnce();
-    expect(harness.controller.dispatchRoute).toHaveBeenCalledOnce();
-    expect(harness.controller.cancelRoute).toHaveBeenCalledOnce();
     session.dispose();
   });
 

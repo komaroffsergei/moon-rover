@@ -14,6 +14,7 @@
 | F010 | T010 | `tests/e2e/bootstrap.spec.ts`, `tests/e2e/release-scenarios.spec.ts`, `tests/e2e/production-boundary.spec.ts` |
 | F011 | T011 | `tests/content-level-catalog.test.ts`, `tests/content-level-smoke.test.ts`, `tests/e2e/level-catalog.spec.ts` |
 | F012 | T012 | full quality gate, product acceptance and user-directed reconciliation evidence |
+| F016 | T016 | camera/HUD/UI unit tests, `tests/e2e/phaser-map.spec.ts`, production boundary и visual QA |
 
 F005/T005 сохраняются в таблице как историческая пара со статусом
 `superseded by D006 / user-directed T012 revision`: нормативное поведение теперь

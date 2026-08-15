@@ -225,9 +225,9 @@ function advanceOperation(
 }
 
 /**
- * Starts at most one canonical repair after a repair rover's final arrival.
- * Same-cell targets win over cardinal neighbors, then IDs provide a stable tie.
- * The elapsed tail keeps a fractional arrival on the exact five-minute timer.
+ * После конечного прибытия ремонтника запускает не больше одного штатного
+ * ремонта. Цель в той же клетке важнее cardinal-соседа, затем действует ID.
+ * Остаток шага сохраняет точные пять минут при дробном времени прибытия.
  */
 export function beginAutomaticRoverRepairAfterArrival(
   rovers: readonly MutableRoverState[],

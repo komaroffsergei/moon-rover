@@ -6,8 +6,8 @@ export interface RandomValuesSource {
 }
 
 /**
- * Creates an independent placement seed for every production session while
- * keeping the coordinate-based E2E mode deterministic.
+ * Создаёт независимый seed размещения для каждой production-сессии, но
+ * сохраняет координатный E2E-режим воспроизводимым.
  */
 export function createPlacementSeed(
   levelId: RuntimeLevelId,

@@ -8,7 +8,6 @@ import type {
   GameSnapshot,
   GridCell,
   RoverActionAvailability,
-  RouteForecast,
 } from '../../domain';
 
 export type GameSelectedEntity =
@@ -20,7 +19,6 @@ export interface GamePublishedView {
   readonly snapshot: GameSnapshot;
   readonly baseCell: GridCell;
   readonly selectedEntity: GameSelectedEntity | null;
-  readonly routingRoverId: string | null;
   readonly focusRequest: {
     readonly key: number;
     readonly entity: GameSelectedEntity;
@@ -34,13 +32,6 @@ export interface GamePublishedView {
     readonly depletionForecastGameMinutes: number;
   }[];
   readonly roverActions: readonly RoverActionAvailability[];
-  readonly routeDraft: {
-    readonly origin: GridCell;
-    readonly steps: readonly GridCell[];
-  } | null;
-  readonly candidateCells: readonly GridCell[];
-  readonly forecast: RouteForecast | null;
-  readonly canDispatchRoute: boolean;
 }
 
 export interface BatteryTransferPreview {
@@ -59,12 +50,6 @@ export interface GameStoreController {
   sendCommand(command: GameCommand): CommandResult;
   selectEntity(entity: GameSelectedEntity): boolean;
   focusEntity(entity: GameSelectedEntity): boolean;
-  beginRoute(roverId: string): boolean;
-  cancelRoute(): void;
-  selectCell(cell: GridCell): boolean;
-  undo(): void;
-  clear(): void;
-  dispatchRoute(): RouteDispatchResult;
   previewBatteryTransfer(
     donorRoverId: string,
     repairRoverId: string,
@@ -117,12 +102,6 @@ export interface GameStoreState {
   startGame(): CommandResult;
   selectEntity(entity: GameSelectedEntity): boolean;
   focusEntity(entity: GameSelectedEntity): boolean;
-  beginRoute(roverId: string): boolean;
-  cancelRoute(): void;
-  selectCell(cell: GridCell): boolean;
-  undoRoute(): void;
-  clearRoute(): void;
-  dispatchRoute(): RouteDispatchResult;
   reportRouteCommandResult(result: RouteDispatchResult): void;
   pause(): CommandResult;
   resume(): CommandResult;
@@ -194,22 +173,6 @@ export function createGameStore(
     },
     selectEntity: (entity) => controller.selectEntity(entity),
     focusEntity: (entity) => controller.focusEntity(entity),
-    beginRoute: (roverId) => controller.beginRoute(roverId),
-    cancelRoute: () => {
-      controller.cancelRoute();
-    },
-    selectCell: (cell) => controller.selectCell(cell),
-    undoRoute: () => {
-      controller.undo();
-    },
-    clearRoute: () => {
-      controller.clear();
-    },
-    dispatchRoute: () => {
-      const result = controller.dispatchRoute();
-      set({ commandError: result.ok ? null : result.code });
-      return result;
-    },
     reportRouteCommandResult: (result) => {
       set({ commandError: result.ok ? null : result.code });
     },

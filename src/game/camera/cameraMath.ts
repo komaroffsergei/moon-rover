@@ -95,19 +95,21 @@ function clampCenterAxis(
   );
 }
 
-export function containFitZoom(
+export function coverFitZoom(
   viewport: ViewportSize,
   world: ViewportSize,
 ): number {
   assertPositiveSize('Viewport', viewport);
   assertPositiveSize('World', world);
 
-  const zoom = Math.min(
+  // Берём большую пропорцию: одна ось карты обрезается, зато viewport не
+  // получает пустые поля.
+  const zoom = Math.max(
     viewport.width / world.width,
     viewport.height / world.height,
   );
   if (!Number.isFinite(zoom) || zoom <= 0) {
-    throw new RangeError('Contain-fit zoom должен быть положительным');
+    throw new RangeError('Cover-fit масштаб должен быть положительным');
   }
   return zoom;
 }

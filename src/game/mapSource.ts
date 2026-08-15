@@ -1,28 +1,15 @@
 import type { GridCell } from '../domain';
 
-export type MapTileLayerName = 'terrain' | 'hazards' | 'obstacles';
+export type MapTileLayerName = 'hazards' | 'obstacles';
 
-export interface MapTileLayerSource {
+interface MapTileLayerSource {
   readonly name: MapTileLayerName;
   readonly data: readonly number[];
   readonly opacity: number;
 }
 
-export interface MapObjectSource {
-  readonly id: number;
-  readonly name: string;
-  readonly className: 'base' | 'center' | 'roverSpawn' | 'repairSpawn';
-  readonly entityId: string | null;
-  readonly cell: GridCell;
-}
-
-export interface MapAssetSource {
+interface MapAssetSource {
   readonly background: string;
-  readonly tileAtlas: string;
-  readonly tileFrameWidth: number;
-  readonly tileFrameHeight: number;
-  readonly tileMargin: number;
-  readonly tileSpacing: number;
   readonly base: string;
   readonly center: string;
   readonly rover: string;
@@ -30,8 +17,7 @@ export interface MapAssetSource {
   readonly roverWheel: string;
 }
 
-export interface MapPalette {
-  readonly grid: string;
+interface MapPalette {
   readonly hazard: string;
   readonly hazardEdge: string;
   readonly route: string;
@@ -41,15 +27,18 @@ export interface MapPalette {
 
 export interface PhaserMapSource {
   readonly id: string;
-  readonly tiledJson: object;
-  readonly tilesetName: string;
   readonly width: number;
   readonly height: number;
   readonly tileWidth: number;
   readonly tileHeight: number;
-  readonly firstGid: number;
+  readonly baseCell: GridCell;
+  readonly backgroundLayer: {
+    readonly x: number;
+    readonly y: number;
+    readonly opacity: number;
+    readonly visible: boolean;
+  };
   readonly layers: readonly MapTileLayerSource[];
-  readonly objects: readonly MapObjectSource[];
   readonly assets: MapAssetSource;
   readonly palette: MapPalette;
 }

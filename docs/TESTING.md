@@ -118,6 +118,14 @@ FREE_NAVIGATION, reroute/U-turn без скачка позиции, blocked targ
 запускает procedural placement на всех пяти картах и подтверждает полную
 capped-разгрузку по прибытии с сохранением избытка у ровера.
 
+T016 добавляет pixel-level canvas-проверку
+`tests/e2e/t016-rover-hud.spec.ts`: у выбранного ровера нет синего selection-
+ring, а cargo занимает одну сегментированную шкалу. Файл
+`tests/e2e/t016-ui-regressions.spec.ts` проверяет квадратные icon-only controls
+без overflow и повторное открытие radio/inspector. Camera-сценарий в
+`tests/e2e/phaser-map.spec.ts` закрепляет cover-fit для 1280×720 и 1920×1080,
+а также изменение zoom кнопками и колесом.
+
 Проверка production nginx:
 
 ```bash

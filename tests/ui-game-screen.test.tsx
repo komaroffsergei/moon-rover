@@ -32,14 +32,9 @@ function createScreenStore({
     snapshot,
     baseCell: { column: 0, row: 0 },
     selectedEntity,
-    routingRoverId: null,
     focusRequest: null,
     centerMetrics: [],
     roverActions: [],
-    routeDraft: null,
-    candidateCells: [],
-    forecast: null,
-    canDispatchRoute: false,
   };
 
   return createStore<GameStoreState>()(

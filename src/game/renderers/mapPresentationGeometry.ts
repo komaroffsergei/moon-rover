@@ -30,7 +30,7 @@ interface RoverHudInput {
   readonly cargoCapacity: number;
 }
 
-export interface RoverHudPresentation {
+interface RoverHudPresentation {
   readonly batteryRatio: number;
   readonly cargoRatios: readonly [number, number, number] | null;
 }
@@ -47,6 +47,8 @@ interface BoundaryEdge {
 
 const JITTER_PRECISION = 1_000;
 const FULL_TURN = Math.PI * 2;
+const ROVER_HUD_CENTER_SPACING = 80;
+const MINIMUM_ROVER_GROUP_RADIUS = 40;
 
 function capacityRatio(value: number, capacity: number): number {
   if (!Number.isFinite(value) || !Number.isFinite(capacity) || capacity <= 0) {
@@ -58,15 +60,24 @@ function capacityRatio(value: number, capacity: number): number {
 export function createRoverHudPresentation(
   rover: RoverHudInput,
 ): RoverHudPresentation {
+  const cargoRatios = [
+    capacityRatio(rover.cargo.oxygen, rover.cargoCapacity),
+    capacityRatio(rover.cargo.food, rover.cargoCapacity),
+    capacityRatio(rover.cargo.equipment, rover.cargoCapacity),
+  ] as const;
+  let freeRatio = 1;
+
   return {
     batteryRatio: capacityRatio(rover.battery, rover.batteryCapacity),
     cargoRatios:
       rover.kind === 'courier'
-        ? [
-            capacityRatio(rover.cargo.oxygen, rover.cargoCapacity),
-            capacityRatio(rover.cargo.food, rover.cargoCapacity),
-            capacityRatio(rover.cargo.equipment, rover.cargoCapacity),
-          ]
+        ? (cargoRatios.map((ratio) => {
+            // Все сегменты делят одну capacity: даже повреждённый snapshot не
+            // должен визуально рисовать больше 100% шкалы.
+            const visibleRatio = Math.min(freeRatio, ratio);
+            freeRatio -= visibleRatio;
+            return visibleRatio;
+          }) as [number, number, number])
         : null,
   };
 }
@@ -76,7 +87,12 @@ export function createRoverGroupOffset(
   count: number,
 ): MapPresentationPoint {
   if (count <= 1 || index < 0 || index >= count) return { x: 0, y: 0 };
-  const radius = count <= 3 ? 22 : count <= 6 ? 34 : 40;
+  // Радиус зависит от числа моделей: соседние battery-ring не пересекаются и
+  // единые cargo-шкалы не складываются в ложные дополнительные индикаторы.
+  const radius = Math.max(
+    MINIMUM_ROVER_GROUP_RADIUS,
+    ROVER_HUD_CENTER_SPACING / (2 * Math.sin(Math.PI / count)),
+  );
   const angle = -Math.PI / 2 + (index / count) * FULL_TURN;
   return {
     x: Math.cos(angle) * radius,

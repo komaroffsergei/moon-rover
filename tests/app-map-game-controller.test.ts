@@ -15,7 +15,6 @@ function createController() {
   return {
     controller: createMapGameController({
       simulation,
-      routingMap: config.routingMap,
       baseCell: config.baseCell,
       centerDefinitions: config.centers,
     }),
@@ -43,130 +42,21 @@ describe('map game controller', () => {
     });
   });
 
-  it('owns selection, candidates, draft and forecast without mutating simulation', () => {
+  it('owns selection without mutating simulation state', () => {
     const { controller, simulation } = createController();
     const before = simulation.getSnapshot();
 
     expect(controller.selectEntity({ kind: 'rover', id: 'missing' })).toBe(
       false,
     );
-    expect(controller.dispatchRoute()).toEqual({
-      ok: false,
-      code: 'ROVER_NOT_SELECTED',
-    });
     expect(
       controller.selectEntity({ kind: 'center', id: standardCenter.id }),
     ).toBe(true);
     expect(controller.getView()).toMatchObject({
       selectedEntity: { kind: 'center', id: standardCenter.id },
-      routingRoverId: null,
-      routeDraft: null,
-      candidateCells: [],
-      forecast: null,
-      canDispatchRoute: false,
-    });
-
-    expect(controller.beginRoute('missing')).toBe(false);
-    expect(controller.beginRoute(standardRover.id)).toBe(true);
-    expect(controller.getView()).toMatchObject({
       baseCell,
-      selectedEntity: { kind: 'center', id: standardCenter.id },
-      routingRoverId: standardRover.id,
-      routeDraft: { origin: baseCell, steps: [] },
-      candidateCells: [
-        { column: 1, row: 0 },
-        { column: 0, row: 1 },
-      ],
-      forecast: {
-        lengthCells: 0,
-        gameMinutes: 0,
-        batteryCost: 0,
-        batteryRemaining: 100,
-        risk: 0,
-      },
-      canDispatchRoute: false,
     });
-
-    expect(controller.selectCell({ column: 1, row: 0 })).toBe(true);
-    expect(controller.selectCell({ column: 0, row: 0 })).toBe(false);
-    const routedView = controller.getView();
-    expect(routedView).toMatchObject({
-      routeDraft: { steps: [{ column: 1, row: 0 }] },
-      forecast: {
-        lengthCells: 1,
-        gameMinutes: 2,
-        batteryCost: 1,
-        batteryRemaining: 99,
-      },
-      canDispatchRoute: false,
-    });
-    expect(routedView.forecast?.risk).toBeCloseTo(0.0075);
     expect(simulation.getSnapshot()).toEqual(before);
-
-    controller.undo();
-    expect(controller.getView().routeDraft?.steps).toEqual([]);
-    controller.selectCell({ column: 0, row: 1 });
-    controller.clear();
-    expect(controller.getView().routeDraft?.steps).toEqual([]);
-    expect(JSON.parse(JSON.stringify(controller.getView()))).toMatchObject({
-      selectedEntity: { kind: 'center', id: standardCenter.id },
-      routingRoverId: standardRover.id,
-      baseCell,
-    });
-
-    controller.cancelRoute();
-    expect(controller.getView()).toMatchObject({
-      selectedEntity: { kind: 'center', id: standardCenter.id },
-      routingRoverId: null,
-      routeDraft: null,
-      candidateCells: [],
-      forecast: null,
-      canDispatchRoute: false,
-    });
-  });
-
-  it('dispatches an explicit route command and resets only a successful draft', () => {
-    const center = {
-      ...structuredClone(standardCenter),
-      cell: { column: 2, row: 0 },
-    };
-    const config = makeSimulationConfig({ centers: [center] });
-    const simulation = createSimulationEngine(config);
-    const controller = createMapGameController({
-      simulation,
-      routingMap: config.routingMap,
-      baseCell: config.baseCell,
-    });
-    controller.start();
-    controller.selectEntity({ kind: 'rover', id: standardRover.id });
-    controller.beginRoute(standardRover.id);
-    controller.selectCell({ column: 1, row: 0 });
-
-    expect(controller.dispatchRoute()).toEqual({
-      ok: false,
-      code: 'ROUTE_GOAL_INVALID',
-    });
-    expect(controller.getView().routeDraft?.steps).toEqual([
-      { column: 1, row: 0 },
-    ]);
-
-    controller.selectCell({ column: 2, row: 0 });
-    expect(controller.getView().canDispatchRoute).toBe(true);
-    expect(controller.dispatchRoute()).toEqual({ ok: true, events: [] });
-    expect(simulation.getSnapshot().rovers[0]?.route).toMatchObject({
-      origin: baseCell,
-      steps: [
-        { column: 1, row: 0 },
-        { column: 2, row: 0 },
-      ],
-      goal: { kind: 'CENTER', centerId: center.id },
-    });
-    expect(controller.getView()).toMatchObject({
-      selectedEntity: { kind: 'rover', id: standardRover.id },
-      routingRoverId: null,
-      routeDraft: null,
-      canDispatchRoute: false,
-    });
   });
 
   it('routes the selected rover immediately to any walkable cell', () => {
@@ -180,9 +70,6 @@ describe('map game controller', () => {
     expect(
       controller.selectEntity({ kind: 'rover', id: standardRover.id }),
     ).toBe(true);
-    expect(controller.beginRoute(standardRover.id)).toBe(true);
-    expect(controller.selectCell({ column: 0, row: 1 })).toBe(true);
-
     expect(controller.routeSelectedRoverTo({ column: 2, row: 0 })).toEqual({
       ok: true,
       events: [],
@@ -200,10 +87,9 @@ describe('map game controller', () => {
       ],
       goal: { kind: 'CELL', cell: { column: 2, row: 0 } },
     });
-    expect(controller.getView()).toMatchObject({
-      selectedEntity: { kind: 'rover', id: standardRover.id },
-      routingRoverId: null,
-      routeDraft: null,
+    expect(controller.getView().selectedEntity).toEqual({
+      kind: 'rover',
+      id: standardRover.id,
     });
 
     expect(controller.routeSelectedRoverTo({ column: 99, row: 0 })).toEqual({
@@ -254,7 +140,6 @@ describe('map game controller', () => {
     const simulation = createSimulationEngine(config);
     const controller = createMapGameController({
       simulation,
-      routingMap: config.routingMap,
       baseCell: config.baseCell,
     });
     controller.start();
@@ -307,65 +192,18 @@ describe('map game controller', () => {
     expect(redirected.route?.steps.at(-1)).toEqual({ column: 2, row: 2 });
   });
 
-  it('infers a rescue goal for a route adjacent to another rover', () => {
-    const targetRover = {
-      ...structuredClone(standardRover),
-      id: 'rover-target',
-      initialCell: { column: 2, row: 0 },
-    };
-    const config = makeSimulationConfig({
-      rovers: [structuredClone(standardRover), targetRover],
-    });
-    const simulation = createSimulationEngine(config);
-    const controller = createMapGameController({
-      simulation,
-      routingMap: config.routingMap,
-      baseCell: config.baseCell,
-    });
-    controller.start();
-    controller.selectEntity({ kind: 'rover', id: standardRover.id });
-    controller.beginRoute(standardRover.id);
-    controller.selectCell({ column: 1, row: 0 });
-
-    expect(controller.getView().canDispatchRoute).toBe(true);
-    expect(controller.dispatchRoute()).toEqual({ ok: true, events: [] });
-    expect(simulation.getSnapshot().rovers[0]?.route?.goal).toEqual({
-      kind: 'RESCUE_ADJACENT',
-      roverId: targetRover.id,
-    });
-  });
-
-  it('owns configuration and rebases the draft after the rover enters a cell', () => {
-    const center = {
-      ...structuredClone(standardCenter),
-      cell: { column: 1, row: 0 },
-    };
-    const config = makeSimulationConfig({ centers: [center] });
+  it('owns an immutable base projection', () => {
+    const config = makeSimulationConfig();
     const mutableBase = { ...config.baseCell };
-    const mutableMap = structuredClone(config.routingMap);
     const simulation = createSimulationEngine(config);
     const controller = createMapGameController({
       simulation,
-      routingMap: mutableMap,
       baseCell: mutableBase,
     });
     mutableBase.column = 99;
-    mutableMap.cells[1]!.walkable = false;
-
-    controller.start();
-    controller.selectEntity({ kind: 'rover', id: standardRover.id });
-    controller.beginRoute(standardRover.id);
-    expect(controller.selectCell({ column: 1, row: 0 })).toBe(true);
-    expect(controller.dispatchRoute()).toEqual({ ok: true, events: [] });
-    expect(controller.beginRoute(standardRover.id)).toBe(true);
-    controller.advance(2_000);
 
     const view = controller.getView();
     expect(view.baseCell).toEqual(baseCell);
-    expect(view.routeDraft).toEqual({
-      origin: { column: 1, row: 0 },
-      steps: [],
-    });
     expect(Object.isFrozen(view)).toBe(true);
     expect(Object.isFrozen(view.baseCell)).toBe(true);
   });
@@ -449,7 +287,6 @@ describe('map game controller', () => {
     const simulation = createSimulationEngine(config);
     const controller = createMapGameController({
       simulation,
-      routingMap: config.routingMap,
       baseCell: config.baseCell,
     });
     const before = simulation.getSnapshot();

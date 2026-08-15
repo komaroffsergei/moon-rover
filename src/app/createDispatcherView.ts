@@ -7,7 +7,7 @@ function percentage(current: number, capacity: number): number {
 
 /**
  * Проецирует validated center definition и snapshot в готовые UI-метрики.
- * React не знает depletion coefficients и не воспроизводит simulation rules.
+ * UI не знает коэффициентов истощения и не воспроизводит правила симуляции.
  */
 export function createCenterUiMetrics(
   snapshot: CenterSnapshot,

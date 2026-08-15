@@ -9,7 +9,7 @@ import type {
 } from '../domain';
 import {
   clampCameraState,
-  containFitZoom,
+  coverFitZoom,
   resizeCameraPreservingCenter,
   zoomAtPointer,
   type CameraConstraints,
@@ -48,13 +48,10 @@ const TEXTURE_KEYS = {
   repairRover: 'repair-rover',
   rover: 'courier-rover',
   roverWheel: 'rover-wheel',
-  tiles: 'lunar-tiles',
-  tilemap: 'shackleton-tiled-map',
 } as const;
 
 const MAP_DEPTH = {
   background: 0,
-  terrain: 10,
   hazards: 20,
   obstacles: 30,
   route: 50,
@@ -111,10 +108,6 @@ interface RoverVisual extends EntityVisual {
   headingRadians: number;
   wheelPhase: number;
   dustVisibleCount: number;
-}
-
-interface ControlButton {
-  readonly container: Phaser.GameObjects.Container;
 }
 
 interface ScreenRect {
@@ -305,8 +298,8 @@ export class MapScene extends Phaser.Scene {
   #selectionGraphics!: Phaser.GameObjects.Graphics;
   #incidentGraphics!: Phaser.GameObjects.Graphics;
   #motionGraphics!: Phaser.GameObjects.Graphics;
-  #zoomInButton!: ControlButton;
-  #zoomOutButton!: ControlButton;
+  #zoomInButton!: Phaser.GameObjects.Container;
+  #zoomOutButton!: Phaser.GameObjects.Container;
   #lastView!: MapGameView;
   #lastFocusRequestKey: number | null = null;
   #lastDiagnosticsTime = Number.NEGATIVE_INFINITY;
@@ -341,14 +334,12 @@ export class MapScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.tilemapTiledJSON(TEXTURE_KEYS.tilemap, this.#map.tiledJson);
     this.load.image(TEXTURE_KEYS.background, this.#map.assets.background);
     this.load.image(TEXTURE_KEYS.base, this.#map.assets.base);
     this.load.image(TEXTURE_KEYS.center, this.#map.assets.center);
     this.load.image(TEXTURE_KEYS.rover, this.#map.assets.rover);
     this.load.image(TEXTURE_KEYS.repairRover, this.#map.assets.repairRover);
     this.load.image(TEXTURE_KEYS.roverWheel, this.#map.assets.roverWheel);
-    this.load.image(TEXTURE_KEYS.tiles, this.#map.assets.tileAtlas);
   }
 
   create(): void {
@@ -415,7 +406,7 @@ export class MapScene extends Phaser.Scene {
       width: this.#worldWidth(),
       height: this.#worldHeight(),
     };
-    const minimumZoom = containFitZoom(viewport, world);
+    const minimumZoom = coverFitZoom(viewport, world);
     return {
       viewport,
       world,
@@ -443,13 +434,6 @@ export class MapScene extends Phaser.Scene {
   };
 
   readonly #handleKeyDown = (event: KeyboardEvent): void => {
-    if (event.key === 'Escape') {
-      this.#controller.cancelRoute();
-    }
-    if (event.key === 'Backspace' && !this.#isEditableTarget(event.target)) {
-      event.preventDefault();
-      this.#controller.undo();
-    }
     if (event.code === 'Space' && this.#mapHasKeyboardFocus()) {
       event.preventDefault();
       this.#spacePanActive = true;
@@ -513,16 +497,6 @@ export class MapScene extends Phaser.Scene {
     return activeElement === this.game.canvas || activeElement === this.#host;
   }
 
-  #isEditableTarget(target: EventTarget | null): boolean {
-    if (!(target instanceof Element)) return false;
-    if (target instanceof HTMLElement && target.isContentEditable) return true;
-    return (
-      target.closest(
-        'input, textarea, select, button, [contenteditable]:not([contenteditable="false"])',
-      ) !== null
-    );
-  }
-
   #applyCamera(): void {
     const camera = this.cameras.main;
     camera.setZoom(this.#cameraState.zoom);
@@ -531,50 +505,17 @@ export class MapScene extends Phaser.Scene {
   }
 
   #createMapLayers(): void {
-    const tilemap = this.make.tilemap({ key: TEXTURE_KEYS.tilemap });
-    const parsedImageLayers = tilemap.images as unknown as Array<{
-      alpha: number;
-      name: string;
-      visible: boolean;
-      x: number;
-      y: number;
-    }>;
-    const imageLayer = parsedImageLayers.find(
-      ({ name }) => name === 'background',
-    );
-    if (!imageLayer) {
-      throw new Error('Parsed Tiled map не содержит background Image Layer');
-    }
+    const background = this.#map.backgroundLayer;
     this.add
       .image(
-        imageLayer.x + this.#worldWidth() / 2,
-        imageLayer.y + this.#worldHeight() / 2,
+        background.x + this.#worldWidth() / 2,
+        background.y + this.#worldHeight() / 2,
         TEXTURE_KEYS.background,
       )
       .setDisplaySize(this.#worldWidth(), this.#worldHeight())
-      .setAlpha(imageLayer.alpha)
-      .setVisible(imageLayer.visible)
+      .setAlpha(background.opacity)
+      .setVisible(background.visible)
       .setDepth(MAP_DEPTH.background);
-
-    const tileset = tilemap.addTilesetImage(
-      this.#map.tilesetName,
-      TEXTURE_KEYS.tiles,
-      this.#map.assets.tileFrameWidth,
-      this.#map.assets.tileFrameHeight,
-      this.#map.assets.tileMargin,
-      this.#map.assets.tileSpacing,
-      this.#map.firstGid,
-    );
-    if (!tileset) {
-      throw new Error('Phaser не подключил embedded Tiled tileset');
-    }
-
-    const terrain = tilemap.createLayer('terrain', tileset, 0, 0, false);
-    terrain.setVisible(false).setDepth(MAP_DEPTH.terrain);
-    const hazards = tilemap.createLayer('hazards', tileset, 0, 0, false);
-    hazards.setVisible(false).setDepth(MAP_DEPTH.hazards);
-    const obstacles = tilemap.createLayer('obstacles', tileset, 0, 0, false);
-    obstacles.setVisible(false).setDepth(MAP_DEPTH.obstacles);
 
     this.#drawHazards();
     this.#drawObstacles();
@@ -648,23 +589,18 @@ export class MapScene extends Phaser.Scene {
   }
 
   #createEntityVisuals(): void {
-    const base = this.#map.objects.find(
-      ({ className }) => className === 'base',
+    const basePosition = cellCenter(this.#map.baseCell, this.#metrics());
+    const baseSprite = this.add
+      .image(basePosition.x, basePosition.y, TEXTURE_KEYS.base)
+      .setDisplaySize(64, 64)
+      .setDepth(MAP_DEPTH.entities)
+      .setInteractive({ useHandCursor: true });
+    baseSprite.on(
+      Phaser.Input.Events.POINTER_UP,
+      (pointer: Phaser.Input.Pointer) => {
+        this.#handleEntityClick(pointer, { kind: 'base', id: 'base' });
+      },
     );
-    if (base) {
-      const position = cellCenter(base.cell, this.#metrics());
-      const sprite = this.add
-        .image(position.x, position.y, TEXTURE_KEYS.base)
-        .setDisplaySize(64, 64)
-        .setDepth(MAP_DEPTH.entities)
-        .setInteractive({ useHandCursor: true });
-      sprite.on(
-        Phaser.Input.Events.POINTER_UP,
-        (pointer: Phaser.Input.Pointer) => {
-          this.#handleEntityClick(pointer, { kind: 'base', id: 'base' });
-        },
-      );
-    }
 
     for (const center of this.#controller.getView().snapshot.centers) {
       const position = cellCenter(center.cell, this.#metrics());
@@ -841,6 +777,9 @@ export class MapScene extends Phaser.Scene {
     pointer: Phaser.Input.Pointer,
     entity: MapSelectedEntity,
   ): void {
+    // Phaser получает window pointerup даже поверх React HUD. Проверяем реальную
+    // цель, иначе исчезающий inspector перехватывает click у DOM-кнопки.
+    if (pointer.upElement !== this.game.canvas) return;
     if (pointer.button !== 0) return;
     const drag = this.#dragState;
     if (
@@ -855,23 +794,7 @@ export class MapScene extends Phaser.Scene {
       return;
     }
 
-    const view = this.#controller.getView();
-    if (view.routingRoverId === null) {
-      this.#controller.selectEntity(entity);
-      return;
-    }
-
-    let cell: GridCell | null = null;
-    if (entity.kind === 'base') {
-      cell = entity.id === 'base' ? view.baseCell : null;
-    } else if (entity.kind === 'center') {
-      cell =
-        view.snapshot.centers.find(({ id }) => id === entity.id)?.cell ?? null;
-    } else {
-      cell =
-        view.snapshot.rovers.find(({ id }) => id === entity.id)?.cell ?? null;
-    }
-    if (cell) this.#controller.selectCell(cell);
+    this.#controller.selectEntity(entity);
   }
 
   #createControls(): void {
@@ -889,7 +812,7 @@ export class MapScene extends Phaser.Scene {
     size: number,
     color: number,
     action: () => void,
-  ): ControlButton {
+  ): Phaser.GameObjects.Container {
     const background = this.add.graphics();
     this.#drawControlBackground(background, size, color, 0.94);
     const text = this.add
@@ -918,7 +841,7 @@ export class MapScene extends Phaser.Scene {
       container.setAlpha(0.9),
     );
     container.setAlpha(0.9);
-    return { container };
+    return container;
   }
 
   #drawControlBackground(
@@ -945,12 +868,9 @@ export class MapScene extends Phaser.Scene {
   #positionControls(): void {
     if (!this.#zoomInButton || !this.#zoomOutButton) return;
     const width = Math.max(1, this.scale.width);
-    const place = (button: ControlButton, x: number, y: number) => {
-      this.#placeScreenObject(button.container, x, y);
-    };
     const height = Math.max(1, this.scale.height);
-    place(this.#zoomInButton, width - 31, height - 83);
-    place(this.#zoomOutButton, width - 31, height - 31);
+    this.#placeScreenObject(this.#zoomInButton, width - 31, height - 83);
+    this.#placeScreenObject(this.#zoomOutButton, width - 31, height - 31);
   }
 
   #placeScreenObject(
@@ -1043,30 +963,9 @@ export class MapScene extends Phaser.Scene {
         this.#applyCamera();
       },
     );
-    this.input.on(
-      Phaser.Input.Events.POINTER_UP,
-      (
-        pointer: Phaser.Input.Pointer,
-        over: readonly Phaser.GameObjects.GameObject[],
-      ) => {
-        const drag = this.#dragState;
-        this.#dragState = null;
-        if (
-          !drag ||
-          drag.pointerId !== pointer.id ||
-          drag.moved ||
-          drag.pansCamera ||
-          over.length > 0
-        ) {
-          return;
-        }
-        const world = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
-        const cell = worldToGridCell(world, this.#metrics());
-        if (cell && this.#controller.getView().routingRoverId !== null) {
-          this.#controller.selectCell(cell);
-        }
-      },
-    );
+    this.input.on(Phaser.Input.Events.POINTER_UP, () => {
+      this.#dragState = null;
+    });
     this.input.on(
       Phaser.Input.Events.POINTER_WHEEL,
       (
@@ -1520,12 +1419,11 @@ export class MapScene extends Phaser.Scene {
     const routeColor = colorNumber(this.#map.palette.route);
     this.#routeGraphics.clear();
     const routeOwnerId =
-      view.routingRoverId ??
-      (view.selectedEntity?.kind === 'rover' ? view.selectedEntity.id : null);
+      view.selectedEntity?.kind === 'rover' ? view.selectedEntity.id : null;
     const confirmed = view.snapshot.rovers.find(
       ({ id }) => id === routeOwnerId,
     )?.route;
-    if (confirmed && (view.routeDraft?.steps.length ?? 0) === 0) {
+    if (confirmed) {
       const routePoints = [
         confirmed.originPosition,
         ...confirmed.legs.map(({ to }) => to),
@@ -1541,24 +1439,6 @@ export class MapScene extends Phaser.Scene {
       this.#routeGraphics.lineStyle(2, routeColor, 0.9);
       this.#routeGraphics.strokeCircle(destination.x, destination.y, 10);
       this.#routeGraphics.strokeCircle(destination.x, destination.y, 15);
-    }
-
-    if (
-      view.routingRoverId !== null &&
-      view.routeDraft &&
-      (!confirmed || view.routeDraft.steps.length > 0)
-    ) {
-      const cells = [view.routeDraft.origin, ...view.routeDraft.steps];
-      if (cells.length > 1) {
-        this.#routeGraphics.lineStyle(8, 0x04101a, 0.96);
-        drawPolyline(this.#routeGraphics, cells, tileWidth, tileHeight);
-        this.#routeGraphics.lineStyle(3, routeColor, 1);
-        drawPolyline(this.#routeGraphics, cells, tileWidth, tileHeight);
-      }
-      const selected = view.routeDraft.steps.at(-1) ?? view.routeDraft.origin;
-      const destination = cellCenter(selected, { tileWidth, tileHeight });
-      this.#routeGraphics.lineStyle(2, routeColor, 0.96);
-      this.#routeGraphics.strokeCircle(destination.x, destination.y, 13);
     }
   }
 
@@ -1610,6 +1490,11 @@ export class MapScene extends Phaser.Scene {
   #renderRovers(view: MapGameView, time: number, delta: number): void {
     this.#incidentGraphics.clear();
     this.#motionGraphics.clear();
+    const cargoColors = [
+      colorNumber(this.#map.palette.route),
+      colorNumber(this.#map.palette.safe),
+      colorNumber(this.#map.palette.warning),
+    ] as const;
     for (const rover of view.snapshot.rovers) {
       const visual = this.#roverVisuals.get(rover.id);
       if (!visual) continue;
@@ -1701,21 +1586,21 @@ export class MapScene extends Phaser.Scene {
         );
         visual.accent.strokePath();
       }
-      hud.cargoRatios?.forEach((ratio, index) => {
-        const barX = x - 18;
-        const barY = y - 47 + index * 6;
-        const colors = [
-          colorNumber(this.#map.palette.route),
-          colorNumber(this.#map.palette.safe),
-          colorNumber(this.#map.palette.warning),
-        ] as const;
+      if (hud.cargoRatios) {
+        const barX = x - 20;
+        const barY = y - 47;
+        const innerWidth = 38;
         visual.accent.fillStyle(0x26343c, 0.96);
-        visual.accent.fillRoundedRect(barX, barY, 36, 4, 2);
-        if (ratio > 0) {
-          visual.accent.fillStyle(colors[index] ?? colors[0], 1);
-          visual.accent.fillRoundedRect(barX, barY, 36 * ratio, 4, 2);
-        }
-      });
+        visual.accent.fillRoundedRect(barX, barY, 40, 6, 3);
+        let segmentX = barX + 1;
+        hud.cargoRatios.forEach((ratio, index) => {
+          const segmentWidth = innerWidth * ratio;
+          if (segmentWidth <= 0) return;
+          visual.accent.fillStyle(cargoColors[index] ?? cargoColors[0], 1);
+          visual.accent.fillRect(segmentX, barY + 1, segmentWidth, 4);
+          segmentX += segmentWidth;
+        });
+      }
       if (rover.activeIncident) {
         const pulse = this.#reducedMotion
           ? 0.7
@@ -1791,13 +1676,7 @@ export class MapScene extends Phaser.Scene {
         radius = 31;
       }
     } else if (entity.kind === 'rover') {
-      const rover = view.snapshot.rovers.find(({ id }) => id === entity.id);
-      if (rover) {
-        const projected = roverWorldPosition(rover, this.#metrics());
-        const offset = roverOffset(rover, view.snapshot.rovers);
-        position = { x: projected.x + offset.x, y: projected.y + offset.y };
-        radius = 33;
-      }
+      return;
     }
     if (position === null) return;
 
@@ -1821,14 +1700,6 @@ export class MapScene extends Phaser.Scene {
       selectedEntity: view.selectedEntity,
       selectedRoverId:
         view.selectedEntity?.kind === 'rover' ? view.selectedEntity.id : null,
-      routingRoverId: view.routingRoverId,
-      draft: view.routeDraft
-        ? {
-            origin: view.routeDraft.origin,
-            steps: view.routeDraft.steps,
-            candidates: view.candidateCells,
-          }
-        : null,
       camera: this.#cameraState,
       reducedMotion: this.#reducedMotion,
       hazardCells: layerCells(

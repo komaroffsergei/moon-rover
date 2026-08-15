@@ -21,7 +21,7 @@ index.html
       ├─→ semantic HUD/panels/dialogs → typed store/controller intents
       └─→ dynamic createGame(parent, runtime)
           → Phaser MapScene
-          ├─→ tilemapTiledJSON → embedded tileset + Image Layer metadata
+          ├─→ local background + normalized hazard/obstacle masks
           ├─→ snapshot projection → keyed center/rover visuals
           └─→ pointer/camera → GridCell → typed controller intent
 ```
@@ -73,7 +73,7 @@ SimulationEngine readonly GameSnapshot
   ├─→ simulation-owned RoverActionAvailability
   ├─→ independent selectedEntity / focusRequest
   ├─→ atomic right-click ROUTE_ROVER_TO → FREE_NAVIGATION
-  │   └─→ reroute from exact live position; legacy draft helpers вне main UI
+  │   └─→ reroute from exact live position без UI draft/undo/confirm
   └─→ subscribe(view), публикация не чаще 100 ms при advance
       → per-session Zustand store
       ├─→ screen/tab/modal/journal/cargo draft — только UI state
@@ -106,10 +106,8 @@ contracts/examples/shackleton-rift.tmj + theme + local public/assets
   → loadContentBundle (Zod + Tiled world validation)
   → app adapter + validated seeded facility layout
   ├─→ SimulationEngine + RoutingMap
-  └─→ PhaserMapSource (raw validated TMJ + assets/palette/placed object projection)
-      → Phaser Tiled parser
-      ├─→ background Image Layer
-      ├─→ невидимые логические terrain / hazards / obstacles из embedded tileset
+  └─→ PhaserMapSource (background/base + hazard/obstacle masks + palette)
+      ├─→ local background image
       └─→ code-native organic zones, blocked relief, smooth route and effects
 
 pointer → camera.getWorldPoint → half-open worldToGridCell
@@ -123,8 +121,9 @@ pointer → camera.getWorldPoint → half-open worldToGridCell
 
 `src/game` не импортирует `content` или `simulation`: сцена получает узкий
 `MapGameController` port и сериализуемый map source. Adjacency, walkability,
-forecast и endpoint→goal остаются в app/simulation. Camera state хранит world
-center и zoom; contain-fit, clamp, pointer anchor и resize — чистая математика.
+route planning и forecast остаются в simulation. Camera state хранит world
+center и zoom; cover-fit, clamp, pointer anchor и resize — чистая математика.
+Cover-fit сохраняет aspect ratio без letterbox, а обрезанные края доступны pan.
 Scene shutdown снимает scale/keyboard listeners и очищает host markers.
 При возврате из скрытой вкладки `MapScene` передаёт Phaser `pauseDuration` через
 тот же controller `advance`; игровая пауза по-прежнему фильтруется simulation.
@@ -264,9 +263,9 @@ DOM/Phaser.
   availability всех rover actions без переноса правил в React.
 - `tests/game-center-map-presentation.test.ts` закрепляет критический текст и
   recovery timer на карте.
-- `tests/app-runtime-map.test.ts` закрепляет validated raw TMJ, embedded tileset,
-  локальные assets, пять изолированных runtime и согласованные simulation
-  entities.
+- `tests/app-runtime-map.test.ts` закрепляет нормализованные grid-маски,
+  локальный background/base projection, пять изолированных runtime и
+  согласованные simulation entities.
 - `tests/app-placement-seed.test.ts` закрепляет новый Web Crypto seed для каждой
   production-сессии и golden seed без crypto в E2E;
   `tests/content-facility-placement.test.ts` проверяет детерминизм на seed,
@@ -274,16 +273,19 @@ DOM/Phaser.
   сохранение simulation seed.
 - `tests/app-map-game-controller.test.ts` покрывает selection, атомарное
   назначение CELL-цели через FREE_NAVIGATION, configured route weights,
-  continuous-origin forecast, endpoint goal, dispatch/rebase и неизменность
-  simulation snapshot; отдельные legacy draft helpers не являются текущим
-  UI-потоком.
+  continuous-origin reroute, immutable base и throttled readonly publication;
+  route-draft API в app/UI отсутствует.
 - `tests/game-map-geometry.test.ts`, `tests/game-camera-math.test.ts` и
   `tests/game-snapshot-projection.test.ts` закрепляют half-open coordinates,
-  contain/clamp/anchor/resize и interpolation из snapshot.
+  cover/clamp/anchor/resize и interpolation из snapshot.
 - `tests/game-map-presentation-geometry.test.ts` проверяет детерминированные
   нерегулярные hazard-контуры всех production-карт и скругление маршрута без
-  сдвига endpoints; `tests/game-rover-heading.test.ts` закрепляет shortest-turn
-  heading, включая переход через границу `±π`.
+  сдвига endpoints, battery/cargo ratios и разнос припаркованных роверов;
+  `tests/game-rover-heading.test.ts` закрепляет shortest-turn heading, включая
+  переход через границу `±π`.
+- `tests/e2e/t016-rover-hud.spec.ts` пиксельно проверяет единую cargo-шкалу и
+  отсутствие синего rover-ring; `tests/e2e/t016-ui-regressions.spec.ts` —
+  icon-only controls и повторное открытие floating surfaces.
 - `tests/content-schemas.test.ts` сверяет public loaders со всеми contract
   examples и проверяет стабильные schema errors.
 - `tests/content-map-validation.test.ts` покрывает Tiled layers/properties,

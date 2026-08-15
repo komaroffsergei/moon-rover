@@ -1,12 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { GridCell, RoutingMap } from '../src/simulation';
-import {
-  appendRouteStep,
-  clearRouteDraft,
-  createRouteDraft,
-  undoRouteStep,
-} from '../src/simulation';
+import { appendRouteStep, createRouteDraft } from '../src/simulation';
 
 function routingMap(blocked: readonly GridCell[] = []): RoutingMap {
   return {
@@ -82,7 +77,7 @@ describe('manual route draft', () => {
     expect(draft.steps).toEqual([]);
   });
 
-  it('requires explicit undo instead of interpreting a previous-cell click', () => {
+  it('rejects immediate reversal in an explicit route sequence', () => {
     const origin = { column: 1, row: 1 };
     const oneStep = appendOrThrow(createRouteDraft(origin), {
       column: 2,
@@ -94,7 +89,6 @@ describe('manual route draft', () => {
       code: 'UNDO_REQUIRED',
     });
     expect(oneStep.steps).toEqual([{ column: 2, row: 1 }]);
-    expect(undoRouteStep(oneStep)).toEqual(createRouteDraft(origin));
   });
 
   it('rejects repeating the current tail without changing the draft', () => {
@@ -107,18 +101,5 @@ describe('manual route draft', () => {
       appendRouteStep(oneStep, { column: 1, row: 0 }, routingMap()),
     ).toEqual({ ok: false, code: 'CELL_NOT_ADJACENT' });
     expect(oneStep.steps).toEqual([{ column: 1, row: 0 }]);
-  });
-
-  it('undoes exactly one step and clear keeps only the origin', () => {
-    const origin = { column: 0, row: 0 };
-    const one = appendOrThrow(createRouteDraft(origin), { column: 1, row: 0 });
-    const two = appendOrThrow(one, { column: 1, row: 1 });
-
-    expect(undoRouteStep(two).steps).toEqual([{ column: 1, row: 0 }]);
-    expect(clearRouteDraft(two)).toEqual(createRouteDraft(origin));
-    expect(undoRouteStep(createRouteDraft(origin))).toEqual(
-      createRouteDraft(origin),
-    );
-    expect(two.steps).toHaveLength(2);
   });
 });

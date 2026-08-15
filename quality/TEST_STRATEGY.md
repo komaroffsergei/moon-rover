@@ -70,7 +70,10 @@
 9. победа при работающих центрах независимо от положения роверов;
 10. resize до 1280×720 сохраняет доступность full-map HUD;
 11. radio drawer открывается и сворачивается, comic bubble закрывается,
-    battery/cargo overlays видны и пятая карта запускается.
+    зелёно-графитовое battery ring и единая сегментированная cargo-шкала видны,
+    отдельного синего rover-ring нет, пятая карта запускается;
+12. cover-fit покрывает viewport 1280×720 и 1920×1080, а `+`, `−` и wheel zoom
+    действительно изменяют camera state.
 
 Текущий `tests/e2e/phaser-map.spec.ts` дополнительно доказывает отсутствие route
 dock/видимого draft/cell markers, any-angle U-turn из live-position, сохранение

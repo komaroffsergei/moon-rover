@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   clampCameraState,
-  containFitZoom,
+  coverFitZoom,
   resizeCameraPreservingCenter,
   zoomAtPointer,
   type CameraConstraints,
@@ -27,30 +27,21 @@ function worldUnderPointer(
 }
 
 describe('camera math', () => {
-  it('calculates a contain-fit zoom for both limiting axes', () => {
+  it('calculates a cover-fit zoom that leaves no empty viewport axis', () => {
     expect(
-      containFitZoom(
-        { width: 800, height: 600 },
-        { width: 1_024, height: 512 },
-      ),
-    ).toBeCloseTo(0.78125);
+      coverFitZoom({ width: 800, height: 600 }, { width: 1_024, height: 512 }),
+    ).toBeCloseTo(1.171875);
     expect(
-      containFitZoom(
-        { width: 800, height: 600 },
-        { width: 400, height: 1_200 },
-      ),
-    ).toBeCloseTo(0.5);
+      coverFitZoom({ width: 800, height: 600 }, { width: 400, height: 1_200 }),
+    ).toBeCloseTo(2);
   });
 
   it('rejects invalid viewport and world sizes', () => {
     expect(() =>
-      containFitZoom(
-        { width: 0, height: 600 },
-        { width: 1_000, height: 1_000 },
-      ),
+      coverFitZoom({ width: 0, height: 600 }, { width: 1_000, height: 1_000 }),
     ).toThrow(RangeError);
     expect(() =>
-      containFitZoom(
+      coverFitZoom(
         { width: 800, height: 600 },
         { width: Number.NaN, height: 1_000 },
       ),
@@ -125,23 +116,24 @@ describe('camera math', () => {
   });
 
   it('preserves first, then clamps zoom and center for a larger viewport', () => {
-    const fitZoom = containFitZoom(
+    const fitZoom = coverFitZoom(
       { width: 1_600, height: 900 },
       { width: 1_000, height: 500 },
     );
-    expect(
-      resizeCameraPreservingCenter(
-        { center: { x: 900, y: 450 }, zoom: 1 },
-        {
-          viewport: { width: 1_600, height: 900 },
-          world: { x: 0, y: 0, width: 1_000, height: 500 },
-          zoom: { min: fitZoom, max: 4 },
-        },
-      ),
-    ).toEqual({
-      center: { x: 500, y: 250 },
-      zoom: 1.6,
-    });
+    const resized = resizeCameraPreservingCenter(
+      { center: { x: 900, y: 450 }, zoom: 1 },
+      {
+        viewport: { width: 1_600, height: 900 },
+        world: { x: 0, y: 0, width: 1_000, height: 500 },
+        zoom: { min: fitZoom, max: 4 },
+      },
+    );
+
+    expect(resized.zoom).toBeCloseTo(1.8);
+    expect(resized.center.x).toBeCloseTo(555.555_556);
+    expect(resized.center.y).toBe(250);
+    expect(1_600 / resized.zoom).toBeLessThanOrEqual(1_000);
+    expect(900 / resized.zoom).toBeLessThanOrEqual(500);
   });
 
   it('rejects non-finite camera and pointer values', () => {

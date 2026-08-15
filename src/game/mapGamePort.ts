@@ -5,18 +5,12 @@ import type {
   GameSnapshot,
   GridCell,
   RoverActionAvailability,
-  RouteForecast,
 } from '../domain';
 
 export interface MapSimulationPort {
   getSnapshot(): GameSnapshot;
   dispatch(command: GameCommand): CommandResult;
   advance(realMilliseconds: number): readonly DomainEvent[];
-}
-
-export interface MapRouteDraftView {
-  readonly origin: GridCell;
-  readonly steps: readonly GridCell[];
 }
 
 export type MapSelectedEntity =
@@ -48,14 +42,9 @@ export interface MapGameView {
   readonly snapshot: GameSnapshot;
   readonly baseCell: GridCell;
   readonly selectedEntity: MapSelectedEntity | null;
-  readonly routingRoverId: string | null;
   readonly focusRequest: MapFocusRequest | null;
   readonly centerMetrics: readonly MapCenterUiMetrics[];
   readonly roverActions: readonly RoverActionAvailability[];
-  readonly routeDraft: MapRouteDraftView | null;
-  readonly candidateCells: readonly GridCell[];
-  readonly forecast: RouteForecast | null;
-  readonly canDispatchRoute: boolean;
 }
 
 export type MapRouteDispatchResult =
@@ -69,12 +58,6 @@ export interface MapGameController {
   advance(realMilliseconds: number): readonly DomainEvent[];
   selectEntity(entity: MapSelectedEntity): boolean;
   focusEntity(entity: MapSelectedEntity): boolean;
-  beginRoute(roverId: string): boolean;
-  cancelRoute(): void;
-  selectCell(cell: GridCell): boolean;
-  undo(): void;
-  clear(): void;
-  dispatchRoute(): MapRouteDispatchResult;
   routeSelectedRoverTo(cell: GridCell): MapRouteDispatchResult;
   previewBatteryTransfer(
     donorRoverId: string,

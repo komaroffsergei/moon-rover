@@ -184,10 +184,11 @@ function navigationGraph(
 }
 
 /**
- * Euclidean shortest distances over the same conservative visibility graph as
- * runtime free navigation. Zero-length corner touches therefore cannot bypass
- * a blocked or excluded hazard cell. Graphs are cached because LogicalGrid is
- * an immutable content-validation value and several authoring bases reuse it.
+ * Евклидовы кратчайшие расстояния считаются по тому же консервативному графу
+ * видимости, что и свободная runtime-навигация. Касание угла нулевой длины не
+ * позволяет обойти blocked или исключённую hazard-клетку. Граф кэшируется:
+ * Значение LogicalGrid неизменяемо, а несколько authoring-баз используют его
+ * повторно.
  */
 export function navigationDistancesFrom(
   grid: LogicalGrid,

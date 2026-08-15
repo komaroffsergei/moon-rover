@@ -396,6 +396,40 @@
         "quality/TEST_STRATEGY.md",
         "quality/THREE_PASS_WORKFLOW.md"
       ]
+    },
+    {
+      "id": "T016",
+      "title": "Финальная доводка карты и production cleanup",
+      "file": "tasks/T016-final-production-polish.md",
+      "feature": "features/F016-final-production-polish.md",
+      "dependsOn": [
+        "T015"
+      ],
+      "status": "completed",
+      "report": "reports/T016.md",
+      "prompt": "prompts/tasks/T016.md",
+      "reasoningEffort": "high",
+      "context": [
+        "AGENTS.md",
+        ".agents/skills/moon-courier-sdd/SKILL.md",
+        "tasks/T016-final-production-polish.md",
+        "features/F016-final-production-polish.md",
+        "specs/product/03-decisions.md",
+        "specs/product/04-assumptions.md",
+        "specs/gameplay/04-rovers-cargo-battery.md",
+        "specs/gameplay/05-manual-routing.md",
+        "specs/ui/01-screen-map.md",
+        "specs/ui/02-main-layout.md",
+        "specs/ui/03-interaction-states.md",
+        "specs/ui/04-visual-style.md",
+        "specs/ui/05-accessibility.md",
+        "specs/technical/05-map-tiled.md",
+        "specs/technical/11-performance.md",
+        "specs/technical/13-module-boundaries.md",
+        "quality/TEST_STRATEGY.md",
+        "quality/REVIEW_CHECKLIST.md",
+        "quality/THREE_PASS_WORKFLOW.md"
+      ]
     }
   ]
 }

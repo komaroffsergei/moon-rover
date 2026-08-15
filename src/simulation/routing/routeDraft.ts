@@ -88,14 +88,6 @@ export function appendRouteStep(
   };
 }
 
-export function undoRouteStep(draft: RouteDraft): RouteDraft {
-  return freezeDraft(draft.origin, draft.steps.slice(0, -1));
-}
-
-export function clearRouteDraft(draft: RouteDraft): RouteDraft {
-  return createRouteDraft(draft.origin);
-}
-
 export function isRouteDraftValid(draft: RouteDraft, map: RoutingMap): boolean {
   if (
     !isInBounds(draft.origin, map) ||

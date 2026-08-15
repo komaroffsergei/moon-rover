@@ -92,9 +92,9 @@ function success(
 }
 
 /**
- * Finds the minimum-cost cardinal route using deterministic Dijkstra search.
- * Cell entry cost combines terrain movement and incident probability; the
- * origin is excluded because the rover has already entered it.
+ * Ищет минимальный cardinal-маршрут детерминированным Dijkstra. Стоимость входа
+ * объединяет terrain и вероятность происшествия; origin исключён, поскольку
+ * ровер уже находится в этой клетке.
  */
 export function findWeightedRoute(
   origin: GridCell,

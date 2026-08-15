@@ -36,7 +36,7 @@ export function unloadRoverCargo(
     currentGameMinute,
     rules,
   );
-  // Subtract the actual capped transfer so excess cargo stays with the rover.
+  // Вычитаем фактическую capped-передачу: избыток остаётся у ровера.
   rover.cargo = {
     oxygen: rover.cargo.oxygen - result.transferred.oxygen,
     food: rover.cargo.food - result.transferred.food,

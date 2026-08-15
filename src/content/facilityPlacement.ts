@@ -72,8 +72,8 @@ function reachabilityGrid(source: TiledMap, map: RoutingMap): LogicalGrid {
 }
 
 /**
- * Selects a validated safe authoring base, then procedurally samples centers.
- * The placement RNG is isolated from the simulation RNG.
+ * Выбирает валидированную безопасную authoring-базу, затем процедурно
+ * размещает центры. RNG размещения изолирован от RNG симуляции.
  */
 export function selectFacilityPlacement(
   content: FacilityPlacementContent,

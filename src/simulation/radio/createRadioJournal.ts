@@ -104,8 +104,8 @@ export function createRadioJournal(catalog: RadioCatalog): RadioJournal {
           const existing = entries[correlatedIndex];
           if (existing === undefined) continue;
           if (existing.correlation?.preferred && correlation.preferred) {
-            // Distinct successful deliveries can legitimately share a rover and
-            // game minute. Their stable message fingerprints handle true dupes.
+            // Разные успешные доставки могут совпасть по роверу и минуте.
+            // Настоящие дубликаты отсекает стабильный fingerprint сообщения.
           } else {
             if (existing.correlation?.preferred || !correlation.preferred) {
               continue;

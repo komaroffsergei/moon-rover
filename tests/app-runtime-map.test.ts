@@ -110,10 +110,15 @@ describe('runtime level catalog composition', () => {
         height: expected.size[1],
         tileWidth: 64,
         tileHeight: 64,
-        tilesetName: 'lunar-logical',
+        baseCell: view.baseCell,
+        backgroundLayer: {
+          x: 0,
+          y: 0,
+          opacity: 1,
+          visible: true,
+        },
       });
       expect(runtime.map.layers.map(({ name }) => name)).toEqual([
-        'terrain',
         'hazards',
         'obstacles',
       ]);
@@ -122,30 +127,12 @@ describe('runtime level catalog composition', () => {
       ).toEqual(expect.arrayContaining([2]));
       expect(runtime.map.assets).toMatchObject({
         background: expected.background,
-        tileAtlas: '/assets/tiles/lunar-logical.png',
-        tileFrameWidth: 64,
-        tileFrameHeight: 64,
-        tileMargin: 0,
-        tileSpacing: 0,
       });
-      expect(
-        runtime.map.objects.filter(({ className }) => className === 'center'),
-      ).toHaveLength(expected.centerCount);
       expect(view.snapshot.rovers).toHaveLength(expected.roverCount);
       expect(view.snapshot.centers).toHaveLength(expected.centerCount);
       expect(view.snapshot.phase).toBe('BRIEFING');
       expect(view.centerMetrics).toHaveLength(expected.centerCount);
-      expect(
-        runtime.map.objects.find(({ className }) => className === 'base')?.cell,
-      ).toEqual(view.baseCell);
-      for (const center of view.snapshot.centers) {
-        expect(
-          runtime.map.objects.find(
-            ({ className, entityId }) =>
-              className === 'center' && entityId === center.id,
-          )?.cell,
-        ).toEqual(center.cell);
-      }
+      expect(runtime.map.baseCell).toEqual(view.baseCell);
       expect(
         view.snapshot.rovers.every(
           ({ cell }) =>
@@ -210,7 +197,7 @@ describe('runtime level catalog composition', () => {
     expect(basesAndCenters.size).toBeGreaterThan(1);
   });
 
-  it('projects a procedural hazard center identically into Phaser and simulation', () => {
+  it('projects the hazard mask and procedural center from one runtime bundle', () => {
     const runtime = Array.from({ length: 64 }, (_, index) =>
       createRuntimeMap('tycho-crater', `runtime-hazard-${index}`),
     ).find((candidate) => {
@@ -233,11 +220,9 @@ describe('runtime level catalog composition', () => {
         hazards?.data[cell.row * runtime!.map.width + cell.column] !== 0,
     );
     expect(hazardousCenter).toBeDefined();
-    expect(
-      runtime!.map.objects.find(
-        ({ className, entityId }) =>
-          className === 'center' && entityId === hazardousCenter?.id,
-      )?.cell,
-    ).toEqual(hazardousCenter?.cell);
+    const cell = hazardousCenter!.cell;
+    expect(hazards?.data[cell.row * runtime!.map.width + cell.column]).not.toBe(
+      0,
+    );
   });
 });

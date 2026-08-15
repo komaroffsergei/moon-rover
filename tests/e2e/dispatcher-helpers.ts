@@ -48,12 +48,6 @@ export interface MapState {
     | { readonly kind: 'base' }
     | { readonly kind: 'center' | 'rover'; readonly id: string }
     | null;
-  readonly routingRoverId: string | null;
-  readonly draft: {
-    readonly origin: Cell;
-    readonly steps: readonly Cell[];
-    readonly candidates: readonly Cell[];
-  } | null;
   readonly camera: {
     readonly center: { readonly x: number; readonly y: number };
     readonly zoom: number;

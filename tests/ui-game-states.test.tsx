@@ -123,7 +123,6 @@ describe('critical center presentation', () => {
       snapshot: createSnapshot({ centers: [recoveryCenter] }),
       baseCell: { column: 1, row: 1 },
       selectedEntity: { kind: 'center', id: recoveryCenter.id },
-      routingRoverId: null,
       focusRequest: null,
       centerMetrics: [
         {
@@ -135,10 +134,6 @@ describe('critical center presentation', () => {
         },
       ],
       roverActions: [],
-      routeDraft: null,
-      candidateCells: [],
-      forecast: null,
-      canDispatchRoute: false,
     };
     const markup = renderToStaticMarkup(
       <SelectedEntityPanel
@@ -178,7 +173,6 @@ describe('critical center presentation', () => {
       snapshot: createSnapshot({ centers: [recoveryCenter] }),
       baseCell: { column: 1, row: 1 },
       selectedEntity: { kind: 'center', id: recoveryCenter.id },
-      routingRoverId: null,
       focusRequest: null,
       centerMetrics: [
         {
@@ -190,10 +184,6 @@ describe('critical center presentation', () => {
         },
       ],
       roverActions: [],
-      routeDraft: null,
-      candidateCells: [],
-      forecast: null,
-      canDispatchRoute: false,
     };
     const markup = renderToStaticMarkup(
       <SelectedEntityPanel
@@ -217,14 +207,9 @@ describe('critical center presentation', () => {
       snapshot: createSnapshot(),
       baseCell: { column: 1, row: 1 },
       selectedEntity: null,
-      routingRoverId: null,
       focusRequest: null,
       centerMetrics: [],
       roverActions: [],
-      routeDraft: null,
-      candidateCells: [],
-      forecast: null,
-      canDispatchRoute: false,
     };
     const markup = renderToStaticMarkup(
       <SelectedEntityPanel
@@ -301,7 +286,6 @@ describe('active route presentation', () => {
       snapshot: createSnapshot({ rovers: [rover] }),
       baseCell: { column: 0, row: 0 },
       selectedEntity: { kind: 'rover', id: rover.id },
-      routingRoverId: null,
       focusRequest: null,
       centerMetrics: [],
       roverActions: [
@@ -316,10 +300,6 @@ describe('active route presentation', () => {
           batteryTransferPairs: [],
         },
       ],
-      routeDraft: null,
-      candidateCells: [],
-      forecast: null,
-      canDispatchRoute: false,
     };
     const markup = renderToStaticMarkup(
       <RoverActions
@@ -364,14 +344,9 @@ describe('cargo presentation', () => {
       snapshot: createSnapshot({ rovers: [rover] }),
       baseCell: { column: 1, row: 1 },
       selectedEntity: null,
-      routingRoverId: null,
       focusRequest: null,
       centerMetrics: [],
       roverActions: [],
-      routeDraft: null,
-      candidateCells: [],
-      forecast: null,
-      canDispatchRoute: false,
     };
     const markup = renderToStaticMarkup(
       <RoverActions

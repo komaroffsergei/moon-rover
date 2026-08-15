@@ -2,14 +2,8 @@ export {
   calculateBatteryAfterCellEntry,
   calculateCellBatteryCost,
 } from './battery/calculateBattery';
-export {
-  clearRouteDraft,
-  createRouteDraft,
-  appendRouteStep,
-  undoRouteStep,
-} from './routing/routeDraft';
+export { createRouteDraft, appendRouteStep } from './routing/routeDraft';
 export type { AppendRouteStepResult, RouteDraft } from './routing/routeDraft';
-export { candidateRouteCells } from './routing/candidateRouteCells';
 export { findWeightedRoute } from './routing/findWeightedRoute';
 export type {
   FindWeightedRouteErrorCode,

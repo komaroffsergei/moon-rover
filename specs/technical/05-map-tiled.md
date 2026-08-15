@@ -31,6 +31,9 @@ level meta. Для доменной классификации использо�
 runtime отдельный `placementSeed` выбирает authoring-базу и процедурно
 распределяет centers по distinct walkable/reachable клеткам, включая hazard.
 Один результат проецируется одновременно в SimulationConfig и PhaserMapSource;
-terrain, hazards и obstacles не перемещаются.
+authoring-слои terrain, hazards и obstacles не перемещаются.
 
-Phaser загружает и рисует карту. Отдельный MapModel извлекает логическую сетку; Phaser objects не являются доменными сущностями.
+Tiled остаётся authoring-форматом и проходит content validation. Runtime-
+проекция передаёт Phaser только используемые hazard/obstacle-маски, `baseCell`
+и локальный background; сцена не создаёт невидимые TilemapLayer ради повторного
+хранения той же сетки. Phaser objects не являются доменными сущностями.

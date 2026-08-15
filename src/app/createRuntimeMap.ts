@@ -6,7 +6,6 @@ import {
   type ContentBundle,
   type FacilityPlacement,
   type TiledMap,
-  type TiledObject,
   type TiledTileLayer,
 } from '../content';
 import {
@@ -17,11 +16,7 @@ import {
   type RuntimeLevelId,
   type RuntimeRiskLevel,
 } from '../content/levels/catalog';
-import type {
-  MapObjectSource,
-  MapTileLayerName,
-  PhaserMapSource,
-} from '../game/mapSource';
+import type { MapTileLayerName, PhaserMapSource } from '../game/mapSource';
 import { createSimulationEngine } from '../simulation';
 import { createMapGameController } from './createMapGameController';
 import { applyNamedE2eScenario } from './testing/e2eSimulationScenario';
@@ -48,17 +43,9 @@ export interface RuntimeMapOptions {
 }
 
 const REQUIRED_TILE_LAYERS: readonly MapTileLayerName[] = [
-  'terrain',
   'hazards',
   'obstacles',
 ];
-
-const SUPPORTED_OBJECT_CLASSES = new Set<MapObjectSource['className']>([
-  'base',
-  'center',
-  'roverSpawn',
-  'repairSpawn',
-]);
 
 function publicAssetPath(path: string): string {
   return path.startsWith('/') ? path : `/${path}`;
@@ -73,13 +60,6 @@ function requiredThemeValue(
   return value;
 }
 
-function propertyString(object: TiledObject, name: string): string | null {
-  const value = object.properties?.find(
-    (property) => property.name === name,
-  )?.value;
-  return typeof value === 'string' ? value : null;
-}
-
 function requiredTileLayer(map: TiledMap, name: MapTileLayerName) {
   const layer = map.layers.find(
     (candidate): candidate is TiledTileLayer =>
@@ -89,56 +69,6 @@ function requiredTileLayer(map: TiledMap, name: MapTileLayerName) {
     throw new Error(`Validated map не содержит слой ${name}`);
   }
   return layer;
-}
-
-function createObjects(
-  map: TiledMap,
-  placement: FacilityPlacement,
-): readonly MapObjectSource[] {
-  const layer = map.layers.find(
-    (candidate) =>
-      candidate.type === 'objectgroup' && candidate.name === 'objects',
-  );
-  if (layer?.type !== 'objectgroup') {
-    throw new Error('Validated map не содержит objects layer');
-  }
-
-  return layer.objects.map((object) => {
-    if (
-      !object.class ||
-      !SUPPORTED_OBJECT_CLASSES.has(
-        object.class as MapObjectSource['className'],
-      )
-    ) {
-      throw new Error(
-        `Неподдерживаемый класс map object: ${String(object.class)}`,
-      );
-    }
-    const entityId = propertyString(object, 'entityId');
-    const placementCell =
-      object.class === 'center' && entityId !== null
-        ? placement.centers[entityId]
-        : object.class === 'base' ||
-            object.class === 'roverSpawn' ||
-            object.class === 'repairSpawn'
-          ? placement.baseCell
-          : undefined;
-    if (object.class === 'center' && placementCell === undefined) {
-      throw new Error(`Validated placement не содержит center ${entityId}`);
-    }
-    return {
-      id: object.id,
-      name: object.name,
-      className: object.class as MapObjectSource['className'],
-      entityId,
-      cell: placementCell
-        ? { ...placementCell }
-        : {
-            column: object.x / map.tilewidth,
-            row: object.y / map.tileheight,
-          },
-    };
-  });
 }
 
 function createPhaserMapSource(
@@ -152,28 +82,19 @@ function createPhaserMapSource(
   if (background?.type !== 'imagelayer') {
     throw new Error('Validated map не содержит background image layer');
   }
-  const tileset = map.tilesets[0];
-  if (
-    !tileset?.image ||
-    !tileset.columns ||
-    !tileset.imagewidth ||
-    !tileset.imageheight ||
-    !tileset.tilecount ||
-    !tileset.name ||
-    !tileset.tilewidth ||
-    !tileset.tileheight
-  ) {
-    throw new Error('Validated map не содержит встроенный atlas tileset');
-  }
   return {
     id: bundle.levelMeta.id,
-    tiledJson: structuredClone(map),
-    tilesetName: tileset.name,
     width: map.width,
     height: map.height,
     tileWidth: map.tilewidth,
     tileHeight: map.tileheight,
-    firstGid: tileset.firstgid,
+    baseCell: { ...placement.baseCell },
+    backgroundLayer: {
+      x: background.x ?? 0,
+      y: background.y ?? 0,
+      opacity: typeof background.opacity === 'number' ? background.opacity : 1,
+      visible: background.visible !== false,
+    },
     layers: REQUIRED_TILE_LAYERS.map((name) => {
       const layer = requiredTileLayer(map, name);
       return {
@@ -182,14 +103,8 @@ function createPhaserMapSource(
         opacity: typeof layer.opacity === 'number' ? layer.opacity : 1,
       };
     }),
-    objects: createObjects(map, placement),
     assets: {
       background: publicAssetPath(background.image),
-      tileAtlas: publicAssetPath(tileset.image),
-      tileFrameWidth: tileset.tilewidth,
-      tileFrameHeight: tileset.tileheight,
-      tileMargin: tileset.margin ?? 0,
-      tileSpacing: tileset.spacing ?? 0,
       base: publicAssetPath(requiredThemeValue(theme.assets, 'base')),
       center: publicAssetPath(requiredThemeValue(theme.assets, 'center')),
       rover: publicAssetPath(requiredThemeValue(theme.assets, 'rover')),
@@ -201,7 +116,6 @@ function createPhaserMapSource(
       ),
     },
     palette: {
-      grid: requiredThemeValue(theme.colors, 'grid'),
       hazard: requiredThemeValue(theme.colors, 'hazard'),
       hazardEdge: requiredThemeValue(theme.colors, 'hazardEdge'),
       route: requiredThemeValue(theme.colors, 'route'),
@@ -233,9 +147,8 @@ function loadRuntimeBundle(levelId: RuntimeLevelId): ContentBundle {
   return bundle;
 }
 
-// Production sources are immutable module assets. Reusing their validated
-// bundle also lets procedural placement reuse its LOS visibility cache while
-// every call below still creates an isolated simulation/controller session.
+// Исходники production неизменяемы. Кэш валидированного bundle повторно
+// использует LOS-граф, но каждый вызов ниже создаёт отдельную сессию симуляции.
 const runtimeBundleCache = new Map<RuntimeLevelId, ContentBundle>();
 
 function createLevelInfo(bundle: ContentBundle): RuntimeLevelInfo {
@@ -287,7 +200,6 @@ export function createRuntimeMap(
   return {
     controller: createMapGameController({
       simulation,
-      routingMap: simulationConfig.routingMap,
       baseCell: simulationConfig.baseCell,
       centerDefinitions: simulationConfig.centers,
     }),
