@@ -1,0 +1,484 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://moon-courier.local/level-meta.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "ordinal",
+    "id",
+    "title",
+    "tiledMap",
+    "themeId",
+    "balanceProfileId",
+    "seed",
+    "shiftDurationRealSeconds",
+    "riskLevel",
+    "centers",
+    "facilityLayouts",
+    "rovers",
+    "riskChoiceCenters",
+    "seededEquipmentDemandCenterIds"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "ordinal": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 300
+    },
+    "tiledMap": {
+      "type": "string",
+      "pattern": "\\.tmj$"
+    },
+    "themeId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "balanceProfileId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "seed": {
+      "type": "string",
+      "minLength": 1
+    },
+    "shiftDurationRealSeconds": {
+      "const": 480
+    },
+    "riskLevel": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "extreme",
+        "maximum"
+      ]
+    },
+    "centers": {
+      "$comment": "centers[].id must be unique; JSON Schema cannot express uniqueness by one object property, so the runtime Zod schema enforces it.",
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/center"
+      }
+    },
+    "facilityLayouts": {
+      "$comment": "Layout ids must be unique and centers must exactly match centers[].id; runtime Zod and map cross-validation enforce these invariants.",
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 12,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/facilityLayout"
+      }
+    },
+    "rovers": {
+      "$comment": "rovers[].id and rovers[].spawnObjectId must each be unique; JSON Schema cannot express uniqueness by one object property, so the runtime Zod schema enforces it.",
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 9,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/rover"
+      }
+    },
+    "riskChoiceCenters": {
+      "$comment": "Every item must reference centers[].id; this cross-array invariant is enforced by the runtime Zod schema.",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      }
+    },
+    "seededEquipmentDemandCenterIds": {
+      "$comment": "Every item must reference centers[].id; this cross-array invariant is enforced by the runtime Zod schema.",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "ordinal": {
+            "const": 1
+          }
+        },
+        "required": [
+          "ordinal"
+        ]
+      },
+      "then": {
+        "properties": {
+          "centers": {
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "rovers": {
+            "minItems": 3,
+            "maxItems": 3,
+            "contains": {
+              "type": "object",
+              "properties": {
+                "archetypeId": {
+                  "const": "repair"
+                }
+              },
+              "required": [
+                "archetypeId"
+              ]
+            },
+            "minContains": 1,
+            "maxContains": 1
+          },
+          "riskLevel": {
+            "const": "low"
+          },
+          "riskChoiceCenters": {
+            "minItems": 1,
+            "maxItems": 1
+          },
+          "seededEquipmentDemandCenterIds": {
+            "minItems": 1,
+            "maxItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "ordinal": {
+            "const": 2
+          }
+        },
+        "required": [
+          "ordinal"
+        ]
+      },
+      "then": {
+        "properties": {
+          "centers": {
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "rovers": {
+            "minItems": 3,
+            "maxItems": 3,
+            "contains": {
+              "type": "object",
+              "properties": {
+                "archetypeId": {
+                  "const": "repair"
+                }
+              },
+              "required": [
+                "archetypeId"
+              ]
+            },
+            "minContains": 1,
+            "maxContains": 1
+          },
+          "riskLevel": {
+            "const": "medium"
+          },
+          "riskChoiceCenters": {
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "seededEquipmentDemandCenterIds": {
+            "minItems": 2,
+            "maxItems": 2
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "ordinal": {
+            "const": 3
+          }
+        },
+        "required": [
+          "ordinal"
+        ]
+      },
+      "then": {
+        "properties": {
+          "centers": {
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "rovers": {
+            "minItems": 4,
+            "maxItems": 4,
+            "contains": {
+              "type": "object",
+              "properties": {
+                "archetypeId": {
+                  "const": "repair"
+                }
+              },
+              "required": [
+                "archetypeId"
+              ]
+            },
+            "minContains": 1,
+            "maxContains": 1
+          },
+          "riskLevel": {
+            "const": "high"
+          },
+          "riskChoiceCenters": {
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "seededEquipmentDemandCenterIds": {
+            "minItems": 3,
+            "maxItems": 3
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "ordinal": {
+            "const": 4
+          }
+        },
+        "required": [
+          "ordinal"
+        ]
+      },
+      "then": {
+        "properties": {
+          "centers": {
+            "minItems": 5,
+            "maxItems": 5
+          },
+          "rovers": {
+            "minItems": 5,
+            "maxItems": 5,
+            "contains": {
+              "type": "object",
+              "properties": {
+                "archetypeId": {
+                  "const": "repair"
+                }
+              },
+              "required": [
+                "archetypeId"
+              ]
+            },
+            "minContains": 1,
+            "maxContains": 1
+          },
+          "riskLevel": {
+            "const": "extreme"
+          },
+          "riskChoiceCenters": {
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "seededEquipmentDemandCenterIds": {
+            "minItems": 4,
+            "maxItems": 4
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "ordinal": {
+            "const": 5
+          }
+        },
+        "required": [
+          "ordinal"
+        ]
+      },
+      "then": {
+        "properties": {
+          "centers": {
+            "minItems": 6,
+            "maxItems": 6
+          },
+          "rovers": {
+            "minItems": 6,
+            "maxItems": 6,
+            "contains": {
+              "type": "object",
+              "properties": {
+                "archetypeId": {
+                  "const": "repair"
+                }
+              },
+              "required": [
+                "archetypeId"
+              ]
+            },
+            "minContains": 1,
+            "maxContains": 1
+          },
+          "riskLevel": {
+            "const": "maximum"
+          },
+          "riskChoiceCenters": {
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "seededEquipmentDemandCenterIds": {
+            "minItems": 5,
+            "maxItems": 5
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "gridCell": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["column", "row"],
+      "properties": {
+        "column": { "type": "integer", "minimum": 0 },
+        "row": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "facilityLayout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "baseCell", "centers"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "baseCell": { "$ref": "#/$defs/gridCell" },
+        "centers": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "additionalProperties": { "$ref": "#/$defs/gridCell" }
+        }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "initial",
+        "capacity",
+        "depletionGameMinutes"
+      ],
+      "properties": {
+        "initial": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 100
+        },
+        "capacity": {
+          "const": 100
+        },
+        "depletionGameMinutes": {
+          "type": "number",
+          "minimum": 180,
+          "maximum": 480
+        }
+      }
+    },
+    "center": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "oxygen",
+        "food",
+        "equipmentInitial"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "oxygen": {
+          "$ref": "#/$defs/resource"
+        },
+        "food": {
+          "$ref": "#/$defs/resource"
+        },
+        "equipmentInitial": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "rover": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "archetypeId",
+        "spawnObjectId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "archetypeId": {
+          "enum": [
+            "fast",
+            "standard",
+            "heavy",
+            "repair"
+          ]
+        },
+        "spawnObjectId": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        }
+      }
+    }
+  }
+}

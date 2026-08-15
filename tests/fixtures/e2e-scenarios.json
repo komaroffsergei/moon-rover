@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "scenarios": {
+    "routing-stable": {
+      "levelId": "shackleton-rift",
+      "seed": "e2e-routing-stable",
+      "time": {
+        "fixedStepMilliseconds": 100,
+        "gameMinutesPerRealSecond": 0.1,
+        "shiftRealSeconds": 600
+      },
+      "equipmentDemandCenterIds": [],
+      "incident": {
+        "cellChance": 0,
+        "weights": { "dustStorm": 1, "meteorite": 1, "crater": 1 }
+      }
+    },
+    "full-cargo-delivery": {
+      "levelId": "shackleton-rift",
+      "seed": "e2e-full-cargo-delivery",
+      "time": {
+        "fixedStepMilliseconds": 100,
+        "gameMinutesPerRealSecond": 1,
+        "shiftRealSeconds": 60
+      },
+      "equipmentDemandCenterIds": [],
+      "centers": [
+        {
+          "id": "aristarchus",
+          "oxygen": { "initial": 95 },
+          "food": { "initial": 95 },
+          "equipmentInitial": 95
+        }
+      ],
+      "rovers": [
+        {
+          "id": "gagarin",
+          "initialCell": { "kind": "CELL", "column": 12, "row": 4 },
+          "initialCargo": { "oxygen": 20, "food": 20, "equipment": 20 }
+        }
+      ],
+      "incident": {
+        "cellChance": 0,
+        "weights": { "dustStorm": 1, "meteorite": 1, "crater": 1 }
+      }
+    },
+    "recovery-success": {
+      "levelId": "shackleton-rift",
+      "seed": "e2e-recovery-success",
+      "time": {
+        "fixedStepMilliseconds": 100,
+        "gameMinutesPerRealSecond": 2,
+        "shiftRealSeconds": 20
+      },
+      "equipmentDemandCenterIds": [],
+      "centers": [
+        {
+          "id": "aristarchus",
+          "oxygen": { "initial": 0.1 }
+        }
+      ],
+      "rovers": [
+        {
+          "id": "gagarin",
+          "initialCell": { "kind": "CENTER", "centerId": "aristarchus" },
+          "initialCargo": { "oxygen": 10, "food": 0, "equipment": 0 }
+        }
+      ]
+    },
+    "recovery-defeat": {
+      "levelId": "shackleton-rift",
+      "seed": "e2e-recovery-defeat",
+      "time": {
+        "fixedStepMilliseconds": 100,
+        "gameMinutesPerRealSecond": 5,
+        "shiftRealSeconds": 20
+      },
+      "equipmentDemandCenterIds": [],
+      "centers": [
+        {
+          "id": "aristarchus",
+          "oxygen": { "initial": 0.1 }
+        }
+      ]
+    },
+    "meteor-repair": {
+      "levelId": "shackleton-rift",
+      "seed": "e2e-forced-meteor-repair",
+      "time": {
+        "fixedStepMilliseconds": 100,
+        "gameMinutesPerRealSecond": 5,
+        "shiftRealSeconds": 20
+      },
+      "equipmentDemandCenterIds": [],
+      "incident": {
+        "cellChance": 1,
+        "weights": { "dustStorm": 0, "meteorite": 1, "crater": 0 }
+      },
+      "rovers": [
+        {
+          "id": "korolev",
+          "initialCell": { "kind": "CELL", "column": 3, "row": 5 }
+        }
+      ]
+    },
+    "battery-transfer": {
+      "levelId": "shackleton-rift",
+      "seed": "e2e-battery-transfer",
+      "time": {
+        "fixedStepMilliseconds": 100,
+        "gameMinutesPerRealSecond": 1,
+        "shiftRealSeconds": 20
+      },
+      "equipmentDemandCenterIds": [],
+      "rovers": [
+        {
+          "id": "gagarin",
+          "batteryInitial": 80
+        },
+        {
+          "id": "korolev",
+          "batteryInitial": 0,
+          "initialCell": { "kind": "CELL", "column": 2, "row": 5 }
+        }
+      ]
+    },
+    "victory-away": {
+      "levelId": "shackleton-rift",
+      "seed": "e2e-victory-away",
+      "time": {
+        "fixedStepMilliseconds": 100,
+        "gameMinutesPerRealSecond": 1,
+        "shiftRealSeconds": 5
+      },
+      "equipmentDemandCenterIds": [],
+      "rovers": [
+        {
+          "id": "gagarin",
+          "initialCell": { "kind": "CELL", "column": 2, "row": 5 }
+        }
+      ]
+    }
+  }
+}

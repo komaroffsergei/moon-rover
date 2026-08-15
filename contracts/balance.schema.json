@@ -1,0 +1,235 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://moon-courier.local/balance.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "time",
+    "center",
+    "routing",
+    "incidents",
+    "rescue",
+    "roverArchetypes"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "time": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gameMinutesPerRealSecond",
+        "fixedStepMilliseconds",
+        "shiftRealSeconds"
+      ],
+      "properties": {
+        "gameMinutesPerRealSecond": {
+          "const": 1
+        },
+        "fixedStepMilliseconds": {
+          "const": 100
+        },
+        "shiftRealSeconds": {
+          "const": 480
+        }
+      }
+    },
+    "center": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "warningThreshold",
+        "recoveryGameMinutes",
+        "radioThresholds",
+        "recoveryRadioThresholds",
+        "equipmentCapacity",
+        "equipmentDemand"
+      ],
+      "properties": {
+        "warningThreshold": {
+          "const": 20
+        },
+        "recoveryGameMinutes": {
+          "const": 30
+        },
+        "radioThresholds": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "const": 50
+            },
+            {
+              "const": 25
+            },
+            {
+              "const": 10
+            },
+            {
+              "const": 5
+            },
+            {
+              "const": 1
+            }
+          ],
+          "items": false
+        },
+        "recoveryRadioThresholds": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "const": 20
+            },
+            {
+              "const": 10
+            },
+            {
+              "const": 5
+            },
+            {
+              "const": 1
+            }
+          ],
+          "items": false
+        },
+        "equipmentCapacity": {
+          "const": 100
+        },
+        "equipmentDemand": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "firstEligibleGameMinute",
+            "minimumIntervalGameMinutes",
+            "lossMin",
+            "lossMax"
+          ],
+          "properties": {
+            "firstEligibleGameMinute": {
+              "const": 30
+            },
+            "minimumIntervalGameMinutes": {
+              "const": 45
+            },
+            "lossMin": {
+              "const": 20
+            },
+            "lossMax": {
+              "const": 40
+            }
+          }
+        }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eventCooldownCells",
+        "routeWeights"
+      ],
+      "properties": {
+        "eventCooldownCells": {
+          "const": 3
+        },
+        "routeWeights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "movementCost",
+            "incidentRisk"
+          ],
+          "properties": {
+            "movementCost": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "incidentRisk": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "incidents": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "normalCellChance",
+        "hazardCellChanceMin",
+        "hazardCellChanceMax"
+      ],
+      "properties": {
+        "normalCellChance": {
+          "type": "number",
+          "minimum": 0.005,
+          "maximum": 0.01
+        },
+        "hazardCellChanceMin": {
+          "type": "number",
+          "minimum": 0.08,
+          "maximum": 0.16
+        },
+        "hazardCellChanceMax": {
+          "type": "number",
+          "minimum": 0.08,
+          "maximum": 0.16
+        }
+      }
+    },
+    "rescue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repairGameMinutes",
+        "craterRescueGameMinutes"
+      ],
+      "properties": {
+        "repairGameMinutes": {
+          "const": 5
+        },
+        "craterRescueGameMinutes": {
+          "const": 3
+        }
+      }
+    },
+    "roverArchetypes": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "cargoCapacity",
+          "batteryCapacity",
+          "gameMinutesPerNormalCell",
+          "batteryCostMultiplier"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "cargoCapacity": {
+            "type": "number",
+            "minimum": 0
+          },
+          "batteryCapacity": {
+            "type": "number",
+            "minimum": 1
+          },
+          "gameMinutesPerNormalCell": {
+            "type": "number",
+            "minimum": 0.5
+          },
+          "batteryCostMultiplier": {
+            "type": "number",
+            "minimum": 0.1
+          }
+        }
+      }
+    }
+  }
+}

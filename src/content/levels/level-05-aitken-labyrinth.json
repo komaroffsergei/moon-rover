@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "ordinal": 5,
+  "riskLevel": "maximum",
+  "id": "aitken-labyrinth",
+  "title": "Лабиринт Эйткена",
+  "description": "Максимальная смена: шесть центров, пять курьеров и три раздельные опасные зоны.",
+  "tiledMap": "aitken-labyrinth.tmj",
+  "themeId": "aitken-maximum",
+  "balanceProfileId": "default",
+  "seed": "aitken-labyrinth-safe-51705",
+  "shiftDurationRealSeconds": 480,
+  "centers": [
+    {
+      "id": "cabeus",
+      "name": "Центр Кабеус",
+      "oxygen": { "initial": 86, "capacity": 100, "depletionGameMinutes": 450 },
+      "food": { "initial": 84, "capacity": 100, "depletionGameMinutes": 450 },
+      "equipmentInitial": 92
+    },
+    {
+      "id": "malapert",
+      "name": "Центр Малаперт",
+      "oxygen": { "initial": 84, "capacity": 100, "depletionGameMinutes": 420 },
+      "food": { "initial": 86, "capacity": 100, "depletionGameMinutes": 450 },
+      "equipmentInitial": 90
+    },
+    {
+      "id": "de-gerlache",
+      "name": "Центр де Герлах",
+      "oxygen": { "initial": 82, "capacity": 100, "depletionGameMinutes": 420 },
+      "food": { "initial": 84, "capacity": 100, "depletionGameMinutes": 420 },
+      "equipmentInitial": 88
+    },
+    {
+      "id": "nobile",
+      "name": "Центр Нобиле",
+      "oxygen": { "initial": 76, "capacity": 100, "depletionGameMinutes": 390 },
+      "food": { "initial": 78, "capacity": 100, "depletionGameMinutes": 390 },
+      "equipmentInitial": 76
+    },
+    {
+      "id": "amundsen",
+      "name": "Центр Амундсен",
+      "oxygen": { "initial": 78, "capacity": 100, "depletionGameMinutes": 390 },
+      "food": { "initial": 76, "capacity": 100, "depletionGameMinutes": 360 },
+      "equipmentInitial": 74
+    },
+    {
+      "id": "shoemaker",
+      "name": "Центр Шумейкер",
+      "oxygen": { "initial": 74, "capacity": 100, "depletionGameMinutes": 360 },
+      "food": { "initial": 72, "capacity": 100, "depletionGameMinutes": 360 },
+      "equipmentInitial": 70
+    }
+  ],
+  "facilityLayouts": [
+    {
+      "id": "aitken-west",
+      "baseCell": { "column": 1, "row": 6 },
+      "centers": {
+        "cabeus": { "column": 17, "row": 6 },
+        "malapert": { "column": 17, "row": 5 },
+        "de-gerlache": { "column": 17, "row": 7 },
+        "nobile": { "column": 4, "row": 12 },
+        "amundsen": { "column": 4, "row": 1 },
+        "shoemaker": { "column": 18, "row": 12 }
+      }
+    },
+    {
+      "id": "aitken-north",
+      "baseCell": { "column": 8, "row": 1 },
+      "centers": {
+        "cabeus": { "column": 8, "row": 11 },
+        "malapert": { "column": 7, "row": 5 },
+        "de-gerlache": { "column": 8, "row": 8 },
+        "nobile": { "column": 18, "row": 3 },
+        "amundsen": { "column": 17, "row": 12 },
+        "shoemaker": { "column": 2, "row": 12 }
+      }
+    },
+    {
+      "id": "aitken-rim",
+      "baseCell": { "column": 6, "row": 2 },
+      "centers": {
+        "cabeus": { "column": 11, "row": 2 },
+        "malapert": { "column": 10, "row": 3 },
+        "de-gerlache": { "column": 10, "row": 2 },
+        "nobile": { "column": 18, "row": 12 },
+        "amundsen": { "column": 1, "row": 12 },
+        "shoemaker": { "column": 18, "row": 3 }
+      }
+    },
+    {
+      "id": "aitken-east",
+      "baseCell": { "column": 13, "row": 2 },
+      "centers": {
+        "cabeus": { "column": 8, "row": 8 },
+        "malapert": { "column": 7, "row": 5 },
+        "de-gerlache": { "column": 7, "row": 6 },
+        "nobile": { "column": 18, "row": 12 },
+        "amundsen": { "column": 1, "row": 12 },
+        "shoemaker": { "column": 3, "row": 11 }
+      }
+    }
+  ],
+  "rovers": [
+    {
+      "id": "gagarin",
+      "name": "Гагарин",
+      "archetypeId": "fast",
+      "spawnObjectId": "spawn-gagarin"
+    },
+    {
+      "id": "leonov",
+      "name": "Леонов",
+      "archetypeId": "standard",
+      "spawnObjectId": "spawn-leonov"
+    },
+    {
+      "id": "armstrong",
+      "name": "Армстронг",
+      "archetypeId": "standard",
+      "spawnObjectId": "spawn-armstrong"
+    },
+    {
+      "id": "collins",
+      "name": "Коллинз",
+      "archetypeId": "heavy",
+      "spawnObjectId": "spawn-collins"
+    },
+    {
+      "id": "ride",
+      "name": "Райд",
+      "archetypeId": "fast",
+      "spawnObjectId": "spawn-ride"
+    },
+    {
+      "id": "zvezda",
+      "name": "Звезда",
+      "archetypeId": "repair",
+      "spawnObjectId": "spawn-zvezda"
+    }
+  ],
+  "riskChoiceCenters": ["cabeus", "malapert", "de-gerlache"],
+  "seededEquipmentDemandCenterIds": [
+    "cabeus",
+    "malapert",
+    "de-gerlache",
+    "nobile",
+    "shoemaker"
+  ]
+}

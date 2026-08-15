@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://moon-courier.local/radio.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "historyLimit", "messages"],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "historyLimit": {
+      "const": 100
+    },
+    "messages": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "oxygen.50",
+        "oxygen.25",
+        "oxygen.10",
+        "oxygen.5",
+        "oxygen.1",
+        "food.50",
+        "food.25",
+        "food.10",
+        "food.5",
+        "food.1",
+        "recovery.30",
+        "recovery.20",
+        "recovery.10",
+        "recovery.5",
+        "recovery.1",
+        "recovery.restored",
+        "recovery.lost",
+        "equipment.demand",
+        "center.request.oxygen",
+        "center.request.food",
+        "center.request.equipment",
+        "incident.dust.courier",
+        "incident.dust.repair",
+        "incident.dust.resolved",
+        "incident.meteor.courier",
+        "incident.meteor.repair",
+        "incident.meteor.resolved",
+        "incident.crater.courier",
+        "incident.crater.repair",
+        "incident.crater.resolved",
+        "rover.arrived",
+        "center.delivery.received",
+        "rover.battery.empty",
+        "rescue.repair.started",
+        "rescue.repair.completed",
+        "rescue.crater.started",
+        "rescue.crater.completed",
+        "rescue.battery.transferred",
+        "system.shift.victory",
+        "system.shift.defeat"
+      ],
+      "properties": {
+        "oxygen.50": { "$ref": "#/$defs/messageDefinition" },
+        "oxygen.25": { "$ref": "#/$defs/messageDefinition" },
+        "oxygen.10": { "$ref": "#/$defs/messageDefinition" },
+        "oxygen.5": { "$ref": "#/$defs/messageDefinition" },
+        "oxygen.1": { "$ref": "#/$defs/messageDefinition" },
+        "food.50": { "$ref": "#/$defs/messageDefinition" },
+        "food.25": { "$ref": "#/$defs/messageDefinition" },
+        "food.10": { "$ref": "#/$defs/messageDefinition" },
+        "food.5": { "$ref": "#/$defs/messageDefinition" },
+        "food.1": { "$ref": "#/$defs/messageDefinition" },
+        "recovery.30": { "$ref": "#/$defs/messageDefinition" },
+        "recovery.20": { "$ref": "#/$defs/messageDefinition" },
+        "recovery.10": { "$ref": "#/$defs/messageDefinition" },
+        "recovery.5": { "$ref": "#/$defs/messageDefinition" },
+        "recovery.1": { "$ref": "#/$defs/messageDefinition" },
+        "recovery.restored": { "$ref": "#/$defs/messageDefinition" },
+        "recovery.lost": { "$ref": "#/$defs/messageDefinition" },
+        "equipment.demand": { "$ref": "#/$defs/amountMessageDefinition" },
+        "center.request.oxygen": {
+          "$ref": "#/$defs/amountMessageDefinition"
+        },
+        "center.request.food": {
+          "$ref": "#/$defs/amountMessageDefinition"
+        },
+        "center.request.equipment": {
+          "$ref": "#/$defs/amountMessageDefinition"
+        },
+        "incident.dust.courier": { "$ref": "#/$defs/messageDefinition" },
+        "incident.dust.repair": { "$ref": "#/$defs/messageDefinition" },
+        "incident.dust.resolved": { "$ref": "#/$defs/messageDefinition" },
+        "incident.meteor.courier": { "$ref": "#/$defs/messageDefinition" },
+        "incident.meteor.repair": { "$ref": "#/$defs/messageDefinition" },
+        "incident.meteor.resolved": { "$ref": "#/$defs/messageDefinition" },
+        "incident.crater.courier": { "$ref": "#/$defs/messageDefinition" },
+        "incident.crater.repair": { "$ref": "#/$defs/messageDefinition" },
+        "incident.crater.resolved": { "$ref": "#/$defs/messageDefinition" },
+        "rover.arrived": { "$ref": "#/$defs/messageDefinition" },
+        "center.delivery.received": {
+          "$ref": "#/$defs/deliveryMessageDefinition"
+        },
+        "rover.battery.empty": { "$ref": "#/$defs/messageDefinition" },
+        "rescue.repair.started": { "$ref": "#/$defs/messageDefinition" },
+        "rescue.repair.completed": { "$ref": "#/$defs/messageDefinition" },
+        "rescue.crater.started": { "$ref": "#/$defs/messageDefinition" },
+        "rescue.crater.completed": { "$ref": "#/$defs/messageDefinition" },
+        "rescue.battery.transferred": {
+          "$ref": "#/$defs/chargeMessageDefinition"
+        },
+        "system.shift.victory": { "$ref": "#/$defs/messageDefinition" },
+        "system.shift.defeat": { "$ref": "#/$defs/messageDefinition" }
+      }
+    }
+  },
+  "$defs": {
+    "messageDefinitionBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category", "priority", "templates"],
+      "properties": {
+        "category": {
+          "enum": [
+            "INFO",
+            "WARNING",
+            "CRITICAL",
+            "EVENT",
+            "RESCUE",
+            "SYSTEM"
+          ]
+        },
+        "priority": {
+          "enum": [0, 1, 2, 3]
+        },
+        "templates": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 180,
+            "pattern": "\\S"
+          }
+        }
+      }
+    },
+    "messageDefinition": {
+      "allOf": [
+        { "$ref": "#/$defs/messageDefinitionBase" },
+        {
+          "properties": {
+            "templates": {
+              "items": { "not": { "pattern": "[{}]" } }
+            }
+          }
+        }
+      ]
+    },
+    "amountMessageDefinition": {
+      "allOf": [
+        { "$ref": "#/$defs/messageDefinitionBase" },
+        {
+          "properties": {
+            "templates": {
+              "items": { "pattern": "^(?:[^{}]|\\{amount\\})+$" }
+            }
+          }
+        }
+      ]
+    },
+    "chargeMessageDefinition": {
+      "allOf": [
+        { "$ref": "#/$defs/messageDefinitionBase" },
+        {
+          "properties": {
+            "templates": {
+              "items": { "pattern": "^(?:[^{}]|\\{charge\\})+$" }
+            }
+          }
+        }
+      ]
+    },
+    "deliveryMessageDefinition": {
+      "allOf": [
+        { "$ref": "#/$defs/messageDefinitionBase" },
+        {
+          "properties": {
+            "templates": {
+              "items": {
+                "pattern": "^(?:[^{}]|\\{oxygen\\}|\\{food\\}|\\{equipment\\})+$"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

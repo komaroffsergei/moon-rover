@@ -1,0 +1,161 @@
+{
+  "checkedAt": "2026-08-13",
+  "sources": [
+    {
+      "id": "codex-agents",
+      "title": "Custom instructions with AGENTS.md",
+      "url": "https://developers.openai.com/codex/agent-configuration/agents-md",
+      "use": "иерархия и приоритет nested AGENTS.md, лимит контекста"
+    },
+    {
+      "id": "codex-skills",
+      "title": "Build skills",
+      "url": "https://developers.openai.com/codex/build-skills",
+      "use": "SKILL.md и progressive disclosure"
+    },
+    {
+      "id": "codex-best-practices",
+      "title": "Codex best practices",
+      "url": "https://developers.openai.com/codex/learn/best-practices",
+      "use": "plan first, короткий AGENTS.md, тестирование и review"
+    },
+    {
+      "id": "phaser-4.2.1",
+      "title": "Phaser 4.2.1 release",
+      "url": "https://phaser.io/download/release/v4.2.1",
+      "use": "зафиксированная ветка движка"
+    },
+    {
+      "id": "phaser-tilemap",
+      "title": "Phaser Tilemap documentation",
+      "url": "https://docs.phaser.io/api-documentation/class/tilemaps-tilemap",
+      "use": "Tiled JSON/Tilemap"
+    },
+    {
+      "id": "phaser-tiled-parser",
+      "title": "Phaser Tiled parser",
+      "url": "https://docs.phaser.io/api-documentation/4.0.0/namespace/tilemaps-parsers-tiled",
+      "use": "embedded tileset restriction"
+    },
+    {
+      "id": "tiled-1.12.2",
+      "title": "Tiled 1.12.2 release",
+      "url": "https://www.mapeditor.org/2026/05/27/tiled-1-12-2-released.html",
+      "use": "редактор уровней"
+    },
+    {
+      "id": "node-24",
+      "title": "Node.js releases",
+      "url": "https://nodejs.org/en/about/previous-releases",
+      "use": "Node 24 LTS"
+    },
+    {
+      "id": "react-19.2",
+      "title": "React versions",
+      "url": "https://react.dev/versions",
+      "use": "DOM UI version line"
+    },
+    {
+      "id": "zustand",
+      "title": "Zustand documentation",
+      "url": "https://zustand.docs.pmnd.rs/",
+      "use": "тонкий UI state bridge"
+    },
+    {
+      "id": "docker-multistage",
+      "title": "Docker multi-stage builds",
+      "url": "https://docs.docker.com/build/building/multi-stage/",
+      "use": "минимальный runtime image"
+    },
+    {
+      "id": "playwright-docker",
+      "title": "Playwright Docker",
+      "url": "https://playwright.dev/docs/docker",
+      "use": "version-matched E2E image"
+    },
+    {
+      "id": "kenney-ui",
+      "title": "Kenney UI Pack - Sci-Fi",
+      "url": "https://kenney.nl/assets/ui-pack-sci-fi",
+      "use": "CC0 UI"
+    },
+    {
+      "id": "kenney-sounds",
+      "title": "Kenney Interface Sounds",
+      "url": "https://kenney.nl/assets/interface-sounds",
+      "use": "CC0 audio"
+    },
+    {
+      "id": "nasa-moon",
+      "title": "NASA CGI Moon Kit",
+      "url": "https://svs.gsfc.nasa.gov/4720",
+      "use": "лунные цветовые/высотные исходники"
+    },
+    {
+      "id": "game-icons",
+      "title": "Game-icons.net",
+      "url": "https://game-icons.net/",
+      "use": "CC BY 3.0 SVG icons"
+    },
+    {
+      "id": "opengameart-moon-surface",
+      "title": "Moon Surface 2D",
+      "url": "https://opengameart.org/content/moon-surface-2d",
+      "use": "лёгкий CC BY 3.0 prototype/background reference, 120.6 KiB"
+    },
+    {
+      "id": "opengameart-space-isometric",
+      "title": "[FREE] Space Isometric Pixel art",
+      "url": "https://opengameart.org/content/free-space-isometric-pixel-art",
+      "use": "лёгкий CC0 isometric alternative; не основной orthogonal style"
+    },
+    {
+      "id": "codex-config",
+      "title": "Codex Configuration Reference",
+      "url": "https://developers.openai.com/codex/config-reference",
+      "use": "reasoning/verbosity и project instruction budget"
+    },
+    {
+      "id": "pnpm-11",
+      "title": "pnpm 11.0",
+      "url": "https://pnpm.io/blog/releases/11.0",
+      "use": "pnpm 11 и требование Node.js 22+"
+    },
+    {
+      "id": "vite-8",
+      "title": "Vite 8.0",
+      "url": "https://vite.dev/blog/announcing-vite8",
+      "use": "выбранная major-линия сборщика"
+    },
+    {
+      "id": "vitest-4",
+      "title": "Vitest 4.0",
+      "url": "https://vitest.dev/blog/vitest-4",
+      "use": "выбранная major-линия unit-тестов"
+    },
+    {
+      "id": "zod-4",
+      "title": "Zod 4",
+      "url": "https://zod.dev/v4",
+      "use": "стабильная runtime-валидация TypeScript контента"
+    },
+    {
+      "id": "pure-rand",
+      "title": "pure-rand",
+      "url": "https://github.com/dubzzz/pure-rand",
+      "use": "детерминированный seeded PRNG"
+    },
+    {
+      "id": "typescript-strict",
+      "title": "TypeScript strict mode",
+      "url": "https://www.typescriptlang.org/docs/handbook/2/basic-types.html",
+      "use": "strict type checking"
+    },
+    {
+      "id": "tiled-class-field",
+      "title": "Tiled TMX changelog",
+      "url": "https://doc.mapeditor.org/en/stable/reference/tmx-changelog/",
+      "use": "современное поле class вместо legacy object type"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "aitken-maximum",
+  "backgroundAsset": "/assets/maps/aitken/background.webp",
+  "colors": {
+    "grid": "#8797A5",
+    "hazard": "#721D35",
+    "hazardEdge": "#FF425C",
+    "route": "#43C6F5",
+    "safe": "#68D391",
+    "warning": "#FFBD4A"
+  },
+  "assets": {
+    "base": "/assets/objects/base.png",
+    "center": "/assets/objects/center.png",
+    "rover": "/assets/objects/rover.png",
+    "repairRover": "/assets/objects/repair-rover.png",
+    "roverWheel": "/assets/objects/rover-wheel.webp"
+  }
+}

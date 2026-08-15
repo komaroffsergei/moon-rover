@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/moon-courier/tasks-manifest.schema.json",
+  "title": "Moon Courier Codex task manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "project",
+    "executionRule",
+    "tasks"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "project": {
+      "const": "moon-courier-crisis"
+    },
+    "executionRule": {
+      "const": "one-task-per-codex-session"
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "file",
+          "feature",
+          "dependsOn",
+          "status",
+          "report",
+          "prompt",
+          "reasoningEffort",
+          "context"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^T[0-9]{3}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "file": {
+            "type": "string",
+            "pattern": "^tasks/T[0-9]{3}-.+\\.md$"
+          },
+          "feature": {
+            "type": "string",
+            "pattern": "^features/F[0-9]{3}-.+\\.md$"
+          },
+          "dependsOn": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^T[0-9]{3}$"
+            }
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "in_progress",
+              "completed",
+              "blocked"
+            ]
+          },
+          "report": {
+            "type": "string",
+            "pattern": "^reports/T[0-9]{3}\\.md$"
+          },
+          "prompt": {
+            "type": "string",
+            "pattern": "^prompts/tasks/T[0-9]{3}\\.md$"
+          },
+          "reasoningEffort": {
+            "enum": [
+              "medium",
+              "high"
+            ]
+          },
+          "context": {
+            "type": "array",
+            "minItems": 4,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

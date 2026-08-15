@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "ordinal": 2,
+  "id": "shackleton-rift",
+  "title": "Разлом Шеклтона",
+  "description": "Крупная зона перекрывает прямые подходы к двум центрам.",
+  "tiledMap": "shackleton-rift.tmj",
+  "themeId": "realistic-dark",
+  "balanceProfileId": "default",
+  "seed": "shackleton-default-2026",
+  "shiftDurationRealSeconds": 480,
+  "riskLevel": "medium",
+  "centers": [
+    {
+      "id": "helios",
+      "name": "Центр Гелиос",
+      "oxygen": {
+        "initial": 72,
+        "capacity": 100,
+        "depletionGameMinutes": 300
+      },
+      "food": {
+        "initial": 66,
+        "capacity": 100,
+        "depletionGameMinutes": 420
+      },
+      "equipmentInitial": 65
+    },
+    {
+      "id": "kepler",
+      "name": "Центр Кеплер",
+      "oxygen": {
+        "initial": 58,
+        "capacity": 100,
+        "depletionGameMinutes": 240
+      },
+      "food": {
+        "initial": 78,
+        "capacity": 100,
+        "depletionGameMinutes": 360
+      },
+      "equipmentInitial": 80
+    },
+    {
+      "id": "aristarchus",
+      "name": "Центр Аристарх",
+      "oxygen": {
+        "initial": 82,
+        "capacity": 100,
+        "depletionGameMinutes": 330
+      },
+      "food": {
+        "initial": 54,
+        "capacity": 100,
+        "depletionGameMinutes": 300
+      },
+      "equipmentInitial": 55
+    }
+  ],
+  "facilityLayouts": [
+    {
+      "id": "shackleton-west",
+      "baseCell": { "column": 0, "row": 3 },
+      "centers": {
+        "helios": { "column": 7, "row": 3 },
+        "aristarchus": { "column": 7, "row": 2 },
+        "kepler": { "column": 1, "row": 0 }
+      }
+    },
+    {
+      "id": "shackleton-north",
+      "baseCell": { "column": 0, "row": 2 },
+      "centers": {
+        "helios": { "column": 7, "row": 2 },
+        "aristarchus": { "column": 7, "row": 3 },
+        "kepler": { "column": 1, "row": 5 }
+      }
+    },
+    {
+      "id": "shackleton-rim",
+      "baseCell": { "column": 7, "row": 3 },
+      "centers": {
+        "helios": { "column": 0, "row": 3 },
+        "aristarchus": { "column": 0, "row": 2 },
+        "kepler": { "column": 6, "row": 0 }
+      }
+    },
+    {
+      "id": "shackleton-east",
+      "baseCell": { "column": 7, "row": 2 },
+      "centers": {
+        "helios": { "column": 0, "row": 2 },
+        "aristarchus": { "column": 0, "row": 3 },
+        "kepler": { "column": 6, "row": 5 }
+      }
+    }
+  ],
+  "rovers": [
+    {
+      "id": "gagarin",
+      "name": "Гагарин",
+      "archetypeId": "standard",
+      "spawnObjectId": "spawn-gagarin"
+    },
+    {
+      "id": "tereshkova",
+      "name": "Терешкова",
+      "archetypeId": "fast",
+      "spawnObjectId": "spawn-tereshkova"
+    },
+    {
+      "id": "korolev",
+      "name": "Королёв",
+      "archetypeId": "repair",
+      "spawnObjectId": "spawn-korolev"
+    }
+  ],
+  "riskChoiceCenters": [
+    "helios",
+    "aristarchus"
+  ],
+  "seededEquipmentDemandCenterIds": [
+    "helios",
+    "aristarchus"
+  ]
+}

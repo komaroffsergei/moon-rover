@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "tranquility-high",
+  "backgroundAsset": "/assets/maps/tranquility/background.webp",
+  "colors": {
+    "grid": "#667A88",
+    "hazard": "#651F36",
+    "hazardEdge": "#FF5264",
+    "route": "#51C8F4",
+    "safe": "#70D28A",
+    "warning": "#FFC857"
+  },
+  "assets": {
+    "base": "/assets/objects/base.png",
+    "center": "/assets/objects/center.png",
+    "rover": "/assets/objects/rover.png",
+    "repairRover": "/assets/objects/repair-rover.png",
+    "roverWheel": "/assets/objects/rover-wheel.webp"
+  }
+}

@@ -1,0 +1,58 @@
+services:
+  dev:
+    build:
+      context: .
+      target: development
+    working_dir: /app
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+      - pnpm_store:/pnpm/store
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:5173').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+      interval: 2s
+      timeout: 2s
+      retries: 30
+    init: true
+
+  verify:
+    build:
+      context: .
+      target: verify
+    init: true
+
+  e2e:
+    image: mcr.microsoft.com/playwright:v1.62.0-noble
+    working_dir: /app
+    depends_on:
+      dev:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+      - pnpm_store:/pnpm/store
+    environment:
+      PLAYWRIGHT_BASE_URL: http://dev:5173
+    ipc: host
+    init: true
+    command:
+      - bash
+      - -lc
+      - corepack enable && pnpm install --frozen-lockfile && pnpm test:e2e
+
+  app:
+    build:
+      context: .
+      target: runtime
+    ports:
+      - "8080:8080"
+
+volumes:
+  node_modules:
+  pnpm_store:

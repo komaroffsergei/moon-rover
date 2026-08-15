@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "pnpm typecheck && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "validate:content": "tsx scripts/validate-content.ts",
+    "test:e2e": "playwright test",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm validate:content && pnpm build"
+  }
+}

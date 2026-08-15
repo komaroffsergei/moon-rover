@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "ordinal": 3,
+  "riskLevel": "high",
+  "id": "tranquility-sea",
+  "title": "Море Спокойствия",
+  "description": "Три центра отделены широкой полосой нестабильного реголита.",
+  "tiledMap": "tranquility-sea.tmj",
+  "themeId": "tranquility-high",
+  "balanceProfileId": "default",
+  "seed": "tranquility-sea-safe-3684",
+  "shiftDurationRealSeconds": 480,
+  "centers": [
+    {
+      "id": "vostok",
+      "name": "Центр Восток",
+      "oxygen": {
+        "initial": 88,
+        "capacity": 100,
+        "depletionGameMinutes": 480
+      },
+      "food": {
+        "initial": 88,
+        "capacity": 100,
+        "depletionGameMinutes": 480
+      },
+      "equipmentInitial": 100
+    },
+    {
+      "id": "zarya",
+      "name": "Центр Заря",
+      "oxygen": {
+        "initial": 88,
+        "capacity": 100,
+        "depletionGameMinutes": 480
+      },
+      "food": {
+        "initial": 88,
+        "capacity": 100,
+        "depletionGameMinutes": 480
+      },
+      "equipmentInitial": 100
+    },
+    {
+      "id": "mir",
+      "name": "Центр Мир",
+      "oxygen": {
+        "initial": 88,
+        "capacity": 100,
+        "depletionGameMinutes": 480
+      },
+      "food": {
+        "initial": 88,
+        "capacity": 100,
+        "depletionGameMinutes": 480
+      },
+      "equipmentInitial": 100
+    },
+    {
+      "id": "luna",
+      "name": "Центр Луна",
+      "oxygen": {
+        "initial": 80,
+        "capacity": 100,
+        "depletionGameMinutes": 390
+      },
+      "food": {
+        "initial": 88,
+        "capacity": 100,
+        "depletionGameMinutes": 450
+      },
+      "equipmentInitial": 82
+    }
+  ],
+  "facilityLayouts": [
+    {
+      "id": "tranquility-south",
+      "baseCell": { "column": 9, "row": 11 },
+      "centers": {
+        "vostok": { "column": 9, "row": 1 },
+        "zarya": { "column": 8, "row": 1 },
+        "mir": { "column": 10, "row": 1 },
+        "luna": { "column": 16, "row": 11 }
+      }
+    },
+    {
+      "id": "tranquility-north",
+      "baseCell": { "column": 7, "row": 1 },
+      "centers": {
+        "vostok": { "column": 10, "row": 8 },
+        "zarya": { "column": 7, "row": 11 },
+        "mir": { "column": 7, "row": 8 },
+        "luna": { "column": 16, "row": 3 }
+      }
+    },
+    {
+      "id": "tranquility-west",
+      "baseCell": { "column": 9, "row": 2 },
+      "centers": {
+        "vostok": { "column": 7, "row": 10 },
+        "zarya": { "column": 11, "row": 8 },
+        "mir": { "column": 10, "row": 11 },
+        "luna": { "column": 1, "row": 5 }
+      }
+    },
+    {
+      "id": "tranquility-east",
+      "baseCell": { "column": 8, "row": 3 },
+      "centers": {
+        "vostok": { "column": 11, "row": 10 },
+        "zarya": { "column": 7, "row": 8 },
+        "mir": { "column": 8, "row": 11 },
+        "luna": { "column": 16, "row": 1 }
+      }
+    }
+  ],
+  "rovers": [
+    {
+      "id": "sagan",
+      "name": "Саган",
+      "archetypeId": "fast",
+      "spawnObjectId": "spawn-sagan"
+    },
+    {
+      "id": "tereshkova",
+      "name": "Терешкова",
+      "archetypeId": "standard",
+      "spawnObjectId": "spawn-tereshkova"
+    },
+    {
+      "id": "apollo",
+      "name": "Аполлон",
+      "archetypeId": "heavy",
+      "spawnObjectId": "spawn-apollo"
+    },
+    {
+      "id": "buran",
+      "name": "Буран",
+      "archetypeId": "repair",
+      "spawnObjectId": "spawn-buran"
+    }
+  ],
+  "riskChoiceCenters": ["vostok", "zarya", "mir"],
+  "seededEquipmentDemandCenterIds": ["vostok", "zarya", "mir"]
+}

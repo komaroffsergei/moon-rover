@@ -1,0 +1,6 @@
+allowBuilds:
+  esbuild: true
+# Точно закреплённая версия вышла в день T001 и иначе отклоняется активной
+# release-age policy pnpm; исключение не разрешает обновление версии.
+minimumReleaseAgeExclude:
+  - zustand@5.0.15

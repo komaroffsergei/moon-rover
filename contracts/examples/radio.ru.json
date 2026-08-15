@@ -1,0 +1,224 @@
+{
+  "schemaVersion": 1,
+  "historyLimit": 100,
+  "messages": {
+    "oxygen.50": {
+      "category": "INFO",
+      "priority": 0,
+      "templates": [
+        "Наш запас кислорода снижается. Нужна плановая поставка."
+      ]
+    },
+    "oxygen.25": {
+      "category": "WARNING",
+      "priority": 1,
+      "templates": ["У нас кончается кислород. Просим ускорить доставку."]
+    },
+    "oxygen.10": {
+      "category": "WARNING",
+      "priority": 2,
+      "templates": ["Мы начинаем терять сознание. Поторопитесь."]
+    },
+    "oxygen.5": {
+      "category": "CRITICAL",
+      "priority": 3,
+      "templates": ["SOS. У нас почти не осталось кислорода."]
+    },
+    "oxygen.1": {
+      "category": "CRITICAL",
+      "priority": 3,
+      "templates": [
+        "[помехи] Вы нас слышите? У нас один процент кислорода."
+      ]
+    },
+    "food.50": {
+      "category": "INFO",
+      "priority": 0,
+      "templates": ["У нас осталось половина запаса пайков."]
+    },
+    "food.25": {
+      "category": "WARNING",
+      "priority": 1,
+      "templates": ["У нас осталась четверть пайков. Нужна поставка."]
+    },
+    "food.10": {
+      "category": "WARNING",
+      "priority": 2,
+      "templates": ["У нас почти закончились пайки. Ускорьте доставку."]
+    },
+    "food.5": {
+      "category": "CRITICAL",
+      "priority": 3,
+      "templates": ["SOS. Наш запас пайков критический."]
+    },
+    "food.1": {
+      "category": "CRITICAL",
+      "priority": 3,
+      "templates": [
+        "[помехи] У нас закончились пайки. Нужна поставка немедленно."
+      ]
+    },
+    "recovery.30": {
+      "category": "CRITICAL",
+      "priority": 3,
+      "templates": [
+        "Ресурс исчерпан. Мы на аварийном питании ещё 30 минут."
+      ]
+    },
+    "recovery.20": {
+      "category": "CRITICAL",
+      "priority": 3,
+      "templates": ["У нас осталось 20 минут. Нужна немедленная поставка."]
+    },
+    "recovery.10": {
+      "category": "CRITICAL",
+      "priority": 3,
+      "templates": ["У нас 10 минут. Системы жизнеобеспечения отключаются."]
+    },
+    "recovery.5": {
+      "category": "CRITICAL",
+      "priority": 3,
+      "templates": ["SOS. Мы продержимся ещё пять минут."]
+    },
+    "recovery.1": {
+      "category": "CRITICAL",
+      "priority": 3,
+      "templates": ["У нас последняя минута. Повторяем: последняя."]
+    },
+    "recovery.restored": {
+      "category": "INFO",
+      "priority": 1,
+      "templates": ["Мы получили поставку и возвращаемся в рабочий режим."]
+    },
+    "recovery.lost": {
+      "category": "CRITICAL",
+      "priority": 3,
+      "templates": ["Аварийный таймер истёк. Мы теряем связь."]
+    },
+    "equipment.demand": {
+      "category": "EVENT",
+      "priority": 1,
+      "templates": ["У нас отказ оборудования. Потеряно: {amount} ед."]
+    },
+    "incident.dust.courier": {
+      "category": "EVENT",
+      "priority": 1,
+      "templates": [
+        "Я попал в пылевую бурю. Про ветер на Луне спрошу после смены."
+      ]
+    },
+    "center.request.oxygen": {
+      "category": "WARNING",
+      "priority": 1,
+      "templates": ["Нам нужен кислород: {amount} ед."]
+    },
+    "center.request.food": {
+      "category": "WARNING",
+      "priority": 1,
+      "templates": ["Нам нужны пайки: {amount} ед."]
+    },
+    "center.request.equipment": {
+      "category": "WARNING",
+      "priority": 1,
+      "templates": ["Нам нужно оборудование: {amount} ед."]
+    },
+    "incident.dust.repair": {
+      "category": "WARNING",
+      "priority": 1,
+      "templates": ["Я пережидаю пылевую бурю."]
+    },
+    "incident.dust.resolved": {
+      "category": "INFO",
+      "priority": 0,
+      "templates": ["Буря позади. Я продолжаю маршрут."]
+    },
+    "incident.meteor.courier": {
+      "category": "EVENT",
+      "priority": 2,
+      "templates": ["В меня попал метеорит. Нужна ремонтная бригада."]
+    },
+    "incident.meteor.repair": {
+      "category": "WARNING",
+      "priority": 1,
+      "templates": [
+        "Метеорит повредил меня. Запускаю самовосстановление."
+      ]
+    },
+    "incident.meteor.resolved": {
+      "category": "INFO",
+      "priority": 0,
+      "templates": ["Я устранил повреждения после метеорита."]
+    },
+    "incident.crater.courier": {
+      "category": "EVENT",
+      "priority": 2,
+      "templates": ["Я застрял в кратере. Нужна помощь рядом."]
+    },
+    "incident.crater.repair": {
+      "category": "WARNING",
+      "priority": 1,
+      "templates": [
+        "Я застрял в кратере и освобождаюсь самостоятельно."
+      ]
+    },
+    "incident.crater.resolved": {
+      "category": "INFO",
+      "priority": 0,
+      "templates": ["Я выбрался из кратера."]
+    },
+    "rover.arrived": {
+      "category": "INFO",
+      "priority": 0,
+      "templates": ["Я прибыл в точку назначения."]
+    },
+    "center.delivery.received": {
+      "category": "INFO",
+      "priority": 1,
+      "templates": [
+        "Мы получили: кислород {oxygen}, пайки {food}, оборудование {equipment}."
+      ]
+    },
+    "rover.battery.empty": {
+      "category": "CRITICAL",
+      "priority": 3,
+      "templates": ["Мой заряд исчерпан. Я остановился."]
+    },
+    "rescue.repair.started": {
+      "category": "RESCUE",
+      "priority": 2,
+      "templates": ["Начинаю ремонт курьера. Мне нужно 5 минут."]
+    },
+    "rescue.repair.completed": {
+      "category": "RESCUE",
+      "priority": 1,
+      "templates": ["Я закончил ремонт. Курьеру нужен новый маршрут."]
+    },
+    "rescue.crater.started": {
+      "category": "RESCUE",
+      "priority": 2,
+      "templates": ["Начинаю вытаскивать ровер из кратера."]
+    },
+    "rescue.crater.completed": {
+      "category": "RESCUE",
+      "priority": 1,
+      "templates": ["Я вытащил ровер из кратера. Можно продолжать маршрут."]
+    },
+    "rescue.battery.transferred": {
+      "category": "RESCUE",
+      "priority": 2,
+      "templates": [
+        "Я получил {charge} заряда. Донор разряжен до нуля."
+      ]
+    },
+    "system.shift.victory": {
+      "category": "SYSTEM",
+      "priority": 2,
+      "templates": ["Смена завершена. Все центры продолжают работу."]
+    },
+    "system.shift.defeat": {
+      "category": "SYSTEM",
+      "priority": 3,
+      "templates": ["Смена завершена аварийно. Условия победы не выполнены."]
+    }
+  }
+}

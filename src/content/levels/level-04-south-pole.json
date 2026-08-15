@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "ordinal": 4,
+  "riskLevel": "extreme",
+  "id": "south-pole",
+  "title": "Южный полюс",
+  "description": "Финальная смена: пять центров, ступенчатая опасная зона и четыре курьера.",
+  "tiledMap": "south-pole.tmj",
+  "themeId": "south-pole-extreme",
+  "balanceProfileId": "default",
+  "seed": "south-pole-safe-51705",
+  "shiftDurationRealSeconds": 480,
+  "centers": [
+    {
+      "id": "cabeus",
+      "name": "Центр Кабеус",
+      "oxygen": {
+        "initial": 88,
+        "capacity": 100,
+        "depletionGameMinutes": 480
+      },
+      "food": {
+        "initial": 88,
+        "capacity": 100,
+        "depletionGameMinutes": 480
+      },
+      "equipmentInitial": 100
+    },
+    {
+      "id": "malapert",
+      "name": "Центр Малаперт",
+      "oxygen": {
+        "initial": 88,
+        "capacity": 100,
+        "depletionGameMinutes": 480
+      },
+      "food": {
+        "initial": 88,
+        "capacity": 100,
+        "depletionGameMinutes": 480
+      },
+      "equipmentInitial": 100
+    },
+    {
+      "id": "de-gerlache",
+      "name": "Центр де Герлах",
+      "oxygen": {
+        "initial": 88,
+        "capacity": 100,
+        "depletionGameMinutes": 480
+      },
+      "food": {
+        "initial": 88,
+        "capacity": 100,
+        "depletionGameMinutes": 480
+      },
+      "equipmentInitial": 100
+    },
+    {
+      "id": "nobile",
+      "name": "Центр Нобиле",
+      "oxygen": {
+        "initial": 76,
+        "capacity": 100,
+        "depletionGameMinutes": 360
+      },
+      "food": {
+        "initial": 80,
+        "capacity": 100,
+        "depletionGameMinutes": 390
+      },
+      "equipmentInitial": 72
+    },
+    {
+      "id": "amundsen",
+      "name": "Центр Амундсен",
+      "oxygen": {
+        "initial": 80,
+        "capacity": 100,
+        "depletionGameMinutes": 390
+      },
+      "food": {
+        "initial": 78,
+        "capacity": 100,
+        "depletionGameMinutes": 360
+      },
+      "equipmentInitial": 76
+    }
+  ],
+  "facilityLayouts": [
+    {
+      "id": "south-pole-west",
+      "baseCell": { "column": 1, "row": 6 },
+      "centers": {
+        "cabeus": { "column": 17, "row": 6 },
+        "malapert": { "column": 17, "row": 5 },
+        "de-gerlache": { "column": 17, "row": 7 },
+        "nobile": { "column": 4, "row": 12 },
+        "amundsen": { "column": 4, "row": 1 }
+      }
+    },
+    {
+      "id": "south-pole-north",
+      "baseCell": { "column": 8, "row": 1 },
+      "centers": {
+        "cabeus": { "column": 8, "row": 11 },
+        "malapert": { "column": 7, "row": 5 },
+        "de-gerlache": { "column": 8, "row": 8 },
+        "nobile": { "column": 18, "row": 3 },
+        "amundsen": { "column": 17, "row": 12 }
+      }
+    },
+    {
+      "id": "south-pole-rim",
+      "baseCell": { "column": 6, "row": 2 },
+      "centers": {
+        "cabeus": { "column": 11, "row": 2 },
+        "malapert": { "column": 10, "row": 3 },
+        "de-gerlache": { "column": 10, "row": 2 },
+        "nobile": { "column": 18, "row": 12 },
+        "amundsen": { "column": 1, "row": 12 }
+      }
+    },
+    {
+      "id": "south-pole-east",
+      "baseCell": { "column": 13, "row": 2 },
+      "centers": {
+        "cabeus": { "column": 8, "row": 8 },
+        "malapert": { "column": 7, "row": 5 },
+        "de-gerlache": { "column": 7, "row": 6 },
+        "nobile": { "column": 18, "row": 12 },
+        "amundsen": { "column": 1, "row": 12 }
+      }
+    }
+  ],
+  "rovers": [
+    {
+      "id": "gagarin",
+      "name": "Гагарин",
+      "archetypeId": "fast",
+      "spawnObjectId": "spawn-gagarin"
+    },
+    {
+      "id": "leonov",
+      "name": "Леонов",
+      "archetypeId": "standard",
+      "spawnObjectId": "spawn-leonov"
+    },
+    {
+      "id": "armstrong",
+      "name": "Армстронг",
+      "archetypeId": "standard",
+      "spawnObjectId": "spawn-armstrong"
+    },
+    {
+      "id": "collins",
+      "name": "Коллинз",
+      "archetypeId": "heavy",
+      "spawnObjectId": "spawn-collins"
+    },
+    {
+      "id": "zvezda",
+      "name": "Звезда",
+      "archetypeId": "repair",
+      "spawnObjectId": "spawn-zvezda"
+    }
+  ],
+  "riskChoiceCenters": ["cabeus", "malapert", "de-gerlache"],
+  "seededEquipmentDemandCenterIds": [
+    "cabeus",
+    "malapert",
+    "de-gerlache",
+    "nobile"
+  ]
+}

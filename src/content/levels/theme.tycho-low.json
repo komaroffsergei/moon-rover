@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "tycho-low",
+  "backgroundAsset": "/assets/maps/tycho/background.webp",
+  "colors": {
+    "grid": "#82919A",
+    "hazard": "#63313A",
+    "hazardEdge": "#F06A55",
+    "route": "#62D4FF",
+    "safe": "#82D879",
+    "warning": "#F4C35D"
+  },
+  "assets": {
+    "base": "/assets/objects/base.png",
+    "center": "/assets/objects/center.png",
+    "rover": "/assets/objects/rover.png",
+    "repairRover": "/assets/objects/repair-rover.png",
+    "roverWheel": "/assets/objects/rover-wheel.webp"
+  }
+}

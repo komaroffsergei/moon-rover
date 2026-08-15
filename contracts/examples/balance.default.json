@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "time": {
+    "gameMinutesPerRealSecond": 1,
+    "fixedStepMilliseconds": 100,
+    "shiftRealSeconds": 480
+  },
+  "center": {
+    "warningThreshold": 20,
+    "recoveryGameMinutes": 30,
+    "radioThresholds": [
+      50,
+      25,
+      10,
+      5,
+      1
+    ],
+    "recoveryRadioThresholds": [
+      20,
+      10,
+      5,
+      1
+    ],
+    "equipmentCapacity": 100,
+    "equipmentDemand": {
+      "firstEligibleGameMinute": 30,
+      "minimumIntervalGameMinutes": 45,
+      "lossMin": 20,
+      "lossMax": 40
+    }
+  },
+  "routing": {
+    "eventCooldownCells": 3,
+    "routeWeights": {
+      "movementCost": 1,
+      "incidentRisk": 10
+    }
+  },
+  "incidents": {
+    "normalCellChance": 0.0075,
+    "hazardCellChanceMin": 0.08,
+    "hazardCellChanceMax": 0.16
+  },
+  "rescue": {
+    "repairGameMinutes": 5,
+    "craterRescueGameMinutes": 3
+  },
+  "roverArchetypes": [
+    {
+      "id": "fast",
+      "cargoCapacity": 40,
+      "batteryCapacity": 90,
+      "gameMinutesPerNormalCell": 1.5,
+      "batteryCostMultiplier": 1.0
+    },
+    {
+      "id": "standard",
+      "cargoCapacity": 60,
+      "batteryCapacity": 100,
+      "gameMinutesPerNormalCell": 2.0,
+      "batteryCostMultiplier": 1.0
+    },
+    {
+      "id": "heavy",
+      "cargoCapacity": 90,
+      "batteryCapacity": 120,
+      "gameMinutesPerNormalCell": 2.5,
+      "batteryCostMultiplier": 1.1
+    },
+    {
+      "id": "repair",
+      "cargoCapacity": 0,
+      "batteryCapacity": 100,
+      "gameMinutesPerNormalCell": 2.0,
+      "batteryCostMultiplier": 1.0
+    }
+  ]
+}

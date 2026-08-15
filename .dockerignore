@@ -1,0 +1,12 @@
+.git
+.codex
+node_modules
+.pnpm-store
+dist
+coverage
+playwright-report
+test-results
+reports
+*.log
+.env*
+!.env.example

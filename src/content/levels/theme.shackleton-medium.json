@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "shackleton-medium",
+  "backgroundAsset": "/assets/maps/shackleton/background.webp",
+  "colors": {
+    "grid": "#71808A",
+    "hazard": "#5C2030",
+    "hazardEdge": "#E24343",
+    "route": "#54C9FF",
+    "safe": "#72D25B",
+    "warning": "#F2B84B"
+  },
+  "assets": {
+    "base": "/assets/objects/base.png",
+    "center": "/assets/objects/center.png",
+    "rover": "/assets/objects/rover.png",
+    "repairRover": "/assets/objects/repair-rover.png",
+    "roverWheel": "/assets/objects/rover-wheel.webp"
+  }
+}
