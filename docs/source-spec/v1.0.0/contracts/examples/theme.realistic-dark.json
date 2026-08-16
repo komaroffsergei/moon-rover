@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "realistic-dark",
+  "backgroundAsset": "assets/maps/shackleton/background.webp",
+  "colors": {
+    "grid": "#71808A",
+    "hazard": "#5C2030",
+    "hazardEdge": "#E24343",
+    "route": "#54C9FF",
+    "safe": "#72D25B",
+    "warning": "#F2B84B"
+  },
+  "assets": {
+    "base": "assets/objects/base.webp",
+    "center": "assets/objects/center.webp",
+    "rover": "assets/objects/rover.webp",
+    "repairRover": "assets/objects/repair-rover.webp"
+  }
+}

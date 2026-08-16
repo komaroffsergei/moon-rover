@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://moon-courier.local/incidents.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "profiles"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "profiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "cellChance",
+          "weights"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "cellChance": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "weights": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "dustStorm",
+              "meteorite",
+              "crater"
+            ],
+            "properties": {
+              "dustStorm": {
+                "type": "number",
+                "minimum": 0
+              },
+              "meteorite": {
+                "type": "number",
+                "minimum": 0
+              },
+              "crater": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

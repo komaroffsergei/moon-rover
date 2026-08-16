@@ -1,0 +1,362 @@
+{
+  "compressionlevel": -1,
+  "height": 6,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tileheight": 64,
+  "tilewidth": 64,
+  "width": 8,
+  "tiledversion": "1.12.2",
+  "type": "map",
+  "version": "1.10",
+  "nextlayerid": 6,
+  "nextobjectid": 5,
+  "layers": [
+    {
+      "id": 1,
+      "name": "background",
+      "type": "imagelayer",
+      "image": "../../public/assets/maps/example/background.webp",
+      "opacity": 1,
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "id": 2,
+      "name": "terrain",
+      "type": "tilelayer",
+      "width": 8,
+      "height": 6,
+      "data": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "opacity": 1,
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "id": 3,
+      "name": "hazards",
+      "type": "tilelayer",
+      "width": 8,
+      "height": 6,
+      "data": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "opacity": 0.65,
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "id": 4,
+      "name": "obstacles",
+      "type": "tilelayer",
+      "width": 8,
+      "height": 6,
+      "data": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "opacity": 1,
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "id": 5,
+      "name": "objects",
+      "type": "objectgroup",
+      "draworder": "topdown",
+      "opacity": 1,
+      "visible": true,
+      "x": 0,
+      "y": 0,
+      "objects": [
+        {
+          "id": 1,
+          "name": "base",
+          "point": true,
+          "x": 64,
+          "y": 256,
+          "properties": [
+            {
+              "name": "entityId",
+              "type": "string",
+              "value": "base"
+            }
+          ],
+          "class": "base"
+        },
+        {
+          "id": 2,
+          "name": "center-example",
+          "point": true,
+          "x": 384,
+          "y": 64,
+          "properties": [
+            {
+              "name": "entityId",
+              "type": "string",
+              "value": "center-example"
+            }
+          ],
+          "class": "center"
+        },
+        {
+          "id": 3,
+          "name": "spawn-gagarin",
+          "point": true,
+          "x": 64,
+          "y": 256,
+          "properties": [
+            {
+              "name": "entityId",
+              "type": "string",
+              "value": "spawn-gagarin"
+            }
+          ],
+          "class": "roverSpawn"
+        },
+        {
+          "id": 4,
+          "name": "spawn-repair",
+          "point": true,
+          "x": 64,
+          "y": 320,
+          "properties": [
+            {
+              "name": "entityId",
+              "type": "string",
+              "value": "spawn-repair"
+            }
+          ],
+          "class": "repairSpawn"
+        }
+      ]
+    }
+  ],
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "name": "logic",
+      "tilewidth": 64,
+      "tileheight": 64,
+      "tilecount": 3,
+      "columns": 3,
+      "image": "../../public/assets/tiles/logic.png",
+      "imagewidth": 192,
+      "imageheight": 64,
+      "tiles": [
+        {
+          "id": 0,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "normal"
+            },
+            {
+              "name": "walkable",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "movementCost",
+              "type": "float",
+              "value": 1.0
+            }
+          ]
+        },
+        {
+          "id": 1,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "rough"
+            },
+            {
+              "name": "walkable",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "movementCost",
+              "type": "float",
+              "value": 1.5
+            },
+            {
+              "name": "hazardProfileId",
+              "type": "string",
+              "value": "hazard-low"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "properties": [
+            {
+              "name": "terrainType",
+              "type": "string",
+              "value": "blocked"
+            },
+            {
+              "name": "walkable",
+              "type": "bool",
+              "value": false
+            },
+            {
+              "name": "movementCost",
+              "type": "float",
+              "value": 99.0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

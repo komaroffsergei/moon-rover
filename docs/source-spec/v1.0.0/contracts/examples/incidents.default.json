@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "id": "normal",
+      "cellChance": 0.0075,
+      "weights": {
+        "dustStorm": 55,
+        "meteorite": 15,
+        "crater": 30
+      }
+    },
+    {
+      "id": "hazard-low",
+      "cellChance": 0.08,
+      "weights": {
+        "dustStorm": 50,
+        "meteorite": 20,
+        "crater": 30
+      }
+    },
+    {
+      "id": "hazard-high",
+      "cellChance": 0.16,
+      "weights": {
+        "dustStorm": 40,
+        "meteorite": 30,
+        "crater": 30
+      }
+    }
+  ]
+}

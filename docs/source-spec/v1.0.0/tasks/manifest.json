@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 1,
+  "project": "moon-courier-crisis",
+  "executionRule": "one-task-per-codex-session",
+  "tasks": [
+    {
+      "id": "T001",
+      "title": "Каркас проекта и Docker-контур",
+      "file": "tasks/T001-bootstrap.md",
+      "feature": "features/F001-bootstrap.md",
+      "dependsOn": [],
+      "status": "pending",
+      "report": "reports/T001.md",
+      "prompt": "prompts/tasks/T001.md",
+      "reasoningEffort": "high",
+      "context": [
+        "AGENTS.md",
+        ".agents/skills/moon-courier-sdd/SKILL.md",
+        "tasks/T001-bootstrap.md",
+        "features/F001-bootstrap.md",
+        "specs/technical/01-stack.md",
+        "specs/technical/03-project-layout.md",
+        "specs/technical/13-module-boundaries.md",
+        "specs/technical/08-docker.md",
+        "specs/technical/09-dependencies.md"
+      ]
+    },
+    {
+      "id": "T002",
+      "title": "Контракты контента и валидатор",
+      "file": "tasks/T002-content-contracts.md",
+      "feature": "features/F002-content-contracts.md",
+      "dependsOn": [
+        "T001"
+      ],
+      "status": "pending",
+      "report": "reports/T002.md",
+      "prompt": "prompts/tasks/T002.md",
+      "reasoningEffort": "high",
+      "context": [
+        "AGENTS.md",
+        ".agents/skills/moon-courier-sdd/SKILL.md",
+        "tasks/T002-content-contracts.md",
+        "features/F002-content-contracts.md",
+        "specs/technical/05-map-tiled.md",
+        "specs/technical/06-map-validation.md",
+        "specs/technical/07-contracts.md",
+        "contracts/tiled-layer-contract.md",
+        "contracts/*.schema.json",
+        "contracts/examples/*"
+      ]
+    },
+    {
+      "id": "T003",
+      "title": "Часы, центры, ресурсы и исход смены",
+      "file": "tasks/T003-simulation-centers.md",
+      "feature": "features/F003-simulation-centers.md",
+      "dependsOn": [
+        "T002"
+      ],
+      "status": "pending",
+      "report": "reports/T003.md",
+      "prompt": "prompts/tasks/T003.md",
+      "reasoningEffort": "medium",
+      "context": [
+        "AGENTS.md",
+        ".agents/skills/moon-courier-sdd/SKILL.md",
+        "tasks/T003-simulation-centers.md",
+        "features/F003-simulation-centers.md",
+        "specs/gameplay/02-clock-and-outcomes.md",
+        "specs/gameplay/03-centers-resources.md",
+        "specs/gameplay/10-state-model.md",
+        "specs/technical/04-simulation.md",
+        "contracts/balance.schema.json"
+      ]
+    },
+    {
+      "id": "T004",
+      "title": "Роверы, груз и батарея",
+      "file": "tasks/T004-rovers-cargo.md",
+      "feature": "features/F004-rovers-cargo.md",
+      "dependsOn": [
+        "T003"
+      ],
+      "status": "pending",
+      "report": "reports/T004.md",
+      "prompt": "prompts/tasks/T004.md",
+      "reasoningEffort": "medium",
+      "context": [
+        "AGENTS.md",
+        ".agents/skills/moon-courier-sdd/SKILL.md",
+        "tasks/T004-rovers-cargo.md",
+        "features/F004-rovers-cargo.md",
+        "specs/gameplay/04-rovers-cargo-battery.md",
+        "specs/gameplay/10-state-model.md",
+        "specs/product/04-assumptions.md",
+        "specs/technical/04-simulation.md"
+      ]
+    },
+    {
+      "id": "T005",
+      "title": "Ручное построение маршрута",
+      "file": "tasks/T005-manual-route.md",
+      "feature": "features/F005-manual-route.md",
+      "dependsOn": [
+        "T004"
+      ],
+      "status": "pending",
+      "report": "reports/T005.md",
+      "prompt": "prompts/tasks/T005.md",
+      "reasoningEffort": "medium",
+      "context": [
+        "AGENTS.md",
+        ".agents/skills/moon-courier-sdd/SKILL.md",
+        "tasks/T005-manual-route.md",
+        "features/F005-manual-route.md",
+        "specs/gameplay/05-manual-routing.md",
+        "specs/gameplay/10-state-model.md",
+        "specs/technical/06-map-validation.md",
+        "contracts/tiled-layer-contract.md"
+      ]
+    },
+    {
+      "id": "T006",
+      "title": "Движение и неблагоприятные события",
+      "file": "tasks/T006-movement-incidents.md",
+      "feature": "features/F006-movement-incidents.md",
+      "dependsOn": [
+        "T005"
+      ],
+      "status": "pending",
+      "report": "reports/T006.md",
+      "prompt": "prompts/tasks/T006.md",
+      "reasoningEffort": "medium",
+      "context": [
+        "AGENTS.md",
+        ".agents/skills/moon-courier-sdd/SKILL.md",
+        "tasks/T006-movement-incidents.md",
+        "features/F006-movement-incidents.md",
+        "specs/gameplay/06-hazards-events.md",
+        "specs/gameplay/09-levels-balance.md",
+        "specs/gameplay/10-state-model.md",
+        "specs/technical/04-simulation.md",
+        "contracts/incidents.schema.json"
+      ]
+    },
+    {
+      "id": "T007",
+      "title": "Спасение, ремонт и передача батареи",
+      "file": "tasks/T007-rescue.md",
+      "feature": "features/F007-rescue.md",
+      "dependsOn": [
+        "T006"
+      ],
+      "status": "pending",
+      "report": "reports/T007.md",
+      "prompt": "prompts/tasks/T007.md",
+      "reasoningEffort": "medium",
+      "context": [
+        "AGENTS.md",
+        ".agents/skills/moon-courier-sdd/SKILL.md",
+        "tasks/T007-rescue.md",
+        "features/F007-rescue.md",
+        "specs/gameplay/07-rescue-repair-transfer.md",
+        "specs/gameplay/04-rovers-cargo-battery.md",
+        "specs/gameplay/10-state-model.md",
+        "specs/technical/04-simulation.md"
+      ]
+    },
+    {
+      "id": "T008",
+      "title": "Рация и журнал событий",
+      "file": "tasks/T008-radio.md",
+      "feature": "features/F008-radio.md",
+      "dependsOn": [
+        "T007"
+      ],
+      "status": "pending",
+      "report": "reports/T008.md",
+      "prompt": "prompts/tasks/T008.md",
+      "reasoningEffort": "medium",
+      "context": [
+        "AGENTS.md",
+        ".agents/skills/moon-courier-sdd/SKILL.md",
+        "tasks/T008-radio.md",
+        "features/F008-radio.md",
+        "specs/gameplay/08-radio.md",
+        "specs/gameplay/03-centers-resources.md",
+        "specs/gameplay/06-hazards-events.md",
+        "contracts/radio.schema.json",
+        "contracts/examples/radio.ru.json"
+      ]
+    },
+    {
+      "id": "T009",
+      "title": "Игровая карта Phaser",
+      "file": "tasks/T009-phaser-map.md",
+      "feature": "features/F009-phaser-map.md",
+      "dependsOn": [
+        "T008"
+      ],
+      "status": "pending",
+      "report": "reports/T009.md",
+      "prompt": "prompts/tasks/T009.md",
+      "reasoningEffort": "high",
+      "context": [
+        "AGENTS.md",
+        ".agents/skills/moon-courier-sdd/SKILL.md",
+        "tasks/T009-phaser-map.md",
+        "features/F009-phaser-map.md",
+        "specs/technical/05-map-tiled.md",
+        "specs/ui/02-main-layout.md",
+        "specs/ui/03-interaction-states.md",
+        "contracts/tiled-layer-contract.md",
+        "references/README.md"
+      ]
+    },
+    {
+      "id": "T010",
+      "title": "Компактный интерфейс диспетчера",
+      "file": "tasks/T010-react-ui.md",
+      "feature": "features/F010-react-ui.md",
+      "dependsOn": [
+        "T009"
+      ],
+      "status": "pending",
+      "report": "reports/T010.md",
+      "prompt": "prompts/tasks/T010.md",
+      "reasoningEffort": "high",
+      "context": [
+        "AGENTS.md",
+        ".agents/skills/moon-courier-sdd/SKILL.md",
+        "tasks/T010-react-ui.md",
+        "features/F010-react-ui.md",
+        "specs/ui/01-screen-map.md",
+        "specs/ui/02-main-layout.md",
+        "specs/ui/03-interaction-states.md",
+        "specs/ui/04-visual-style.md",
+        "specs/ui/05-accessibility.md"
+      ]
+    },
+    {
+      "id": "T011",
+      "title": "Четыре карты, баланс и ассеты",
+      "file": "tasks/T011-four-levels.md",
+      "feature": "features/F011-four-levels.md",
+      "dependsOn": [
+        "T010"
+      ],
+      "status": "pending",
+      "report": "reports/T011.md",
+      "prompt": "prompts/tasks/T011.md",
+      "reasoningEffort": "high",
+      "context": [
+        "AGENTS.md",
+        ".agents/skills/moon-courier-sdd/SKILL.md",
+        "tasks/T011-four-levels.md",
+        "features/F011-four-levels.md",
+        "specs/gameplay/09-levels-balance.md",
+        "specs/technical/06-map-validation.md",
+        "specs/technical/10-assets-tiles.md",
+        "contracts/examples/",
+        "references/04-map-risk-topology.png"
+      ]
+    },
+    {
+      "id": "T012",
+      "title": "Регрессия, упрощение и release build",
+      "file": "tasks/T012-release.md",
+      "feature": "features/F012-release.md",
+      "dependsOn": [
+        "T011"
+      ],
+      "status": "pending",
+      "report": "reports/T012.md",
+      "prompt": "prompts/tasks/T012.md",
+      "reasoningEffort": "high",
+      "context": [
+        "AGENTS.md",
+        ".agents/skills/moon-courier-sdd/SKILL.md",
+        "tasks/T012-release.md",
+        "features/F012-release.md",
+        "quality/DEFINITION_OF_DONE.md",
+        "quality/TEST_STRATEGY.md",
+        "quality/REVIEW_CHECKLIST.md",
+        "quality/CONTEXT_BUDGET.md",
+        "quality/ACCEPTANCE.md",
+        "specs/technical/11-performance.md",
+        "specs/technical/12-documentation.md",
+        "specs/technical/13-module-boundaries.md"
+      ]
+    }
+  ]
+}

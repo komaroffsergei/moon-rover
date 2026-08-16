@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://moon-courier.local/level-meta.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "title",
+    "tiledMap",
+    "themeId",
+    "balanceProfileId",
+    "seed",
+    "shiftDurationRealSeconds",
+    "centers",
+    "rovers",
+    "riskChoiceCenters"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 300
+    },
+    "tiledMap": {
+      "type": "string",
+      "pattern": "\\.tmj$"
+    },
+    "themeId": {
+      "type": "string"
+    },
+    "balanceProfileId": {
+      "type": "string"
+    },
+    "seed": {
+      "type": "string",
+      "minLength": 1
+    },
+    "shiftDurationRealSeconds": {
+      "const": 480
+    },
+    "centers": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 6,
+      "items": {
+        "$ref": "#/$defs/center"
+      }
+    },
+    "rovers": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 9,
+      "items": {
+        "$ref": "#/$defs/rover"
+      }
+    },
+    "riskChoiceCenters": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "initial",
+        "capacity",
+        "depletionGameMinutes"
+      ],
+      "properties": {
+        "initial": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 100
+        },
+        "capacity": {
+          "const": 100
+        },
+        "depletionGameMinutes": {
+          "type": "number",
+          "minimum": 180,
+          "maximum": 480
+        }
+      }
+    },
+    "center": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "oxygen",
+        "food",
+        "equipmentInitial"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "oxygen": {
+          "$ref": "#/$defs/resource"
+        },
+        "food": {
+          "$ref": "#/$defs/resource"
+        },
+        "equipmentInitial": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "rover": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "archetypeId",
+        "spawnObjectId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "archetypeId": {
+          "enum": [
+            "fast",
+            "standard",
+            "heavy",
+            "repair"
+          ]
+        },
+        "spawnObjectId": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
