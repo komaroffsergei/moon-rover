@@ -9,6 +9,7 @@ specs/
 tasks/
 templates/
 docker/*.template
+docs/source-spec/v1.0.0/
 CODEX_START.md
 MANIFEST.json
 PACKAGE_TREE.md

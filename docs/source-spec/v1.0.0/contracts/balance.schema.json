@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://moon-courier.local/balance.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "time",
+    "center",
+    "routing",
+    "incidents",
+    "roverArchetypes"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "time": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gameMinutesPerRealSecond",
+        "fixedStepMilliseconds",
+        "shiftRealSeconds"
+      ],
+      "properties": {
+        "gameMinutesPerRealSecond": {
+          "const": 1
+        },
+        "fixedStepMilliseconds": {
+          "const": 100
+        },
+        "shiftRealSeconds": {
+          "const": 480
+        }
+      }
+    },
+    "center": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "warningThreshold",
+        "recoveryGameMinutes",
+        "radioThresholds"
+      ],
+      "properties": {
+        "warningThreshold": {
+          "const": 20
+        },
+        "recoveryGameMinutes": {
+          "const": 30
+        },
+        "radioThresholds": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "const": 50
+            },
+            {
+              "const": 25
+            },
+            {
+              "const": 10
+            },
+            {
+              "const": 5
+            },
+            {
+              "const": 1
+            }
+          ],
+          "items": false
+        }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eventCooldownCells"
+      ],
+      "properties": {
+        "eventCooldownCells": {
+          "const": 3
+        }
+      }
+    },
+    "incidents": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "normalCellChance",
+        "hazardCellChanceMin",
+        "hazardCellChanceMax"
+      ],
+      "properties": {
+        "normalCellChance": {
+          "type": "number",
+          "minimum": 0.005,
+          "maximum": 0.01
+        },
+        "hazardCellChanceMin": {
+          "type": "number",
+          "minimum": 0.08,
+          "maximum": 0.16
+        },
+        "hazardCellChanceMax": {
+          "type": "number",
+          "minimum": 0.08,
+          "maximum": 0.16
+        }
+      }
+    },
+    "roverArchetypes": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "cargoCapacity",
+          "batteryCapacity",
+          "gameMinutesPerNormalCell",
+          "batteryCostMultiplier"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "cargoCapacity": {
+            "type": "number",
+            "minimum": 0
+          },
+          "batteryCapacity": {
+            "type": "number",
+            "minimum": 1
+          },
+          "gameMinutesPerNormalCell": {
+            "type": "number",
+            "minimum": 0.5
+          },
+          "batteryCostMultiplier": {
+            "type": "number",
+            "minimum": 0.1
+          }
+        }
+      }
+    }
+  }
+}
